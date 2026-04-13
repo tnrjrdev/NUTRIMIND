@@ -1,0 +1,249 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Usuario {
+  id        Int      @id @default(autoincrement())
+  nome      String
+  email     String   @unique
+  senhaHash String   @map("senha_hash")
+  ativo     Boolean  @default(true)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("usuarios")
+}
+
+model CategoriaReceita {
+  id            Int       @id @default(autoincrement())
+  nome          String
+  descricao     String?
+  ordemExibicao Int       @default(0)
+  ativo         Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  receitas      Receita[]
+}
+
+model Receita {
+  id           Int              @id @default(autoincrement())
+  categoriaId  Int
+  categoria    CategoriaReceita @relation(fields: [categoriaId], references: [id])
+  nome         String
+  descricao    String?
+  imagem       String?
+  tempoPreparo String?
+  destaque     Boolean          @default(false)
+  ativo        Boolean          @default(true)
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  ingredientes Ingrediente[]
+  modosPreparo ModoPreparo[]
+}
+
+model Ingrediente {
+  id            Int      @id @default(autoincrement())
+  receitaId     Int
+  receita       Receita  @relation(fields: [receitaId], references: [id])
+  descricao     String
+  ordemExibicao Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model ModoPreparo {
+  id          Int      @id @default(autoincrement())
+  receitaId   Int
+  receita     Receita  @relation(fields: [receitaId], references: [id])
+  numeroPasso Int
+  descricao   String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model CategoriaProduto {
+  id            Int       @id @default(autoincrement())
+  nome          String
+  descricao     String?
+  imagem        String?
+  ordemExibicao Int       @default(0)
+  ativo         Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  produtos      Produto[]
+}
+
+model Produto {
+  id            Int              @id @default(autoincrement())
+  categoriaId   Int
+  categoria     CategoriaProduto @relation(fields: [categoriaId], references: [id])
+  nome          String
+  marca         String?
+  descricao     String?
+  imagem        String?
+  recomendado   Boolean          @default(false)
+  semAcucar     Boolean          @default(false)
+  semGluten     Boolean          @default(false)
+  semLactose    Boolean          @default(false)
+  fonteProteina Boolean          @default(false)
+  fonteGorduraBoa Boolean        @default(false)
+  fonteFibra    Boolean          @default(false)
+  observacao    String?
+  ordemExibicao Int              @default(0)
+  ativo         Boolean          @default(true)
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+}
+
+model CategoriaFornecedor {
+  id            Int          @id @default(autoincrement())
+  nome          String
+  descricao     String?
+  ordemExibicao Int          @default(0)
+  ativo         Boolean      @default(true)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  fornecedores  Fornecedor[]
+}
+
+model Fornecedor {
+  id                 Int                  @id @default(autoincrement())
+  categoriaId        Int
+  categoria          CategoriaFornecedor  @relation(fields: [categoriaId], references: [id])
+  nome               String
+  descricaoCurta     String?
+  descricaoDetalhada String?
+  endereco           String?
+  telefone           String?
+  whatsapp           String?
+  instagram          String?
+  site               String?
+  ordemExibicao      Int                  @default(0)
+  ativo              Boolean              @default(true)
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+
+  cupons CupomDesconto[]
+}
+
+model CupomDesconto {
+  id           Int        @id @default(autoincrement())
+  fornecedorId Int
+  fornecedor   Fornecedor @relation(fields: [fornecedorId], references: [id])
+  codigo       String
+  descricao    String?
+  validade     DateTime?
+  ativo        Boolean    @default(true)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+}
+
+model CategoriaIfood {
+  id            Int                @id @default(autoincrement())
+  nome          String
+  descricao     String?
+  ordemExibicao Int                @default(0)
+  ativo         Boolean            @default(true)
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+  restaurantes  RestauranteIfood[]
+}
+
+model RestauranteIfood {
+  id            Int             @id @default(autoincrement())
+  categoriaId   Int
+  categoria     CategoriaIfood  @relation(fields: [categoriaId], references: [id])
+  nome          String
+  descricao     String?
+  telefone      String?
+  linkExterno   String?
+  ordemExibicao Int             @default(0)
+  ativo         Boolean         @default(true)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+}
+
+model CategoriaCha {
+  id            Int       @id @default(autoincrement())
+  nome          String
+  descricao     String?
+  imagem        String?
+  ordemExibicao Int       @default(0)
+  ativo         Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  chas          Cha[]
+}
+
+model Cha {
+  id               Int          @id @default(autoincrement())
+  categoriaId      Int
+  categoria        CategoriaCha @relation(fields: [categoriaId], references: [id])
+  nome             String
+  formaUtilizacao  String?
+  posologia        String?
+  contraindicacoes String?
+  observacoes      String?
+  usoAdulto        Boolean      @default(false)
+  usoInfantil      Boolean      @default(false)
+  ordemExibicao    Int          @default(0)
+  ativo            Boolean      @default(true)
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+}
+
+model CategoriaSubstituicao {
+  id            Int                 @id @default(autoincrement())
+  nome          String
+  descricao     String?
+  ordemExibicao Int                 @default(0)
+  ativo         Boolean             @default(true)
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+  itens         ItemSubstituicao[]
+}
+
+model ItemSubstituicao {
+  id            Int                    @id @default(autoincrement())
+  categoriaId   Int
+  categoria     CategoriaSubstituicao  @relation(fields: [categoriaId], references: [id])
+  nome          String
+  descricao     String?
+  equivalencia  String?
+  ordemExibicao Int                    @default(0)
+  ativo         Boolean                @default(true)
+  createdAt     DateTime               @default(now())
+  updatedAt     DateTime               @updatedAt
+}
+
+model BemEstarItem {
+  id                 Int      @id @default(autoincrement())
+  nome               String
+  descricaoCurta     String?
+  descricaoDetalhada String?
+  telefone           String?
+  whatsapp           Boolean  @default(false)
+  instagram          String?
+  site               String?
+  midiaUrl           String?
+  ordemExibicao      Int      @default(0)
+  ativo              Boolean  @default(true)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
+
+model Dica {
+  id            Int      @id @default(autoincrement())
+  texto         String
+  icone         String?
+  ordemExibicao Int      @default(0)
+  ativo         Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
