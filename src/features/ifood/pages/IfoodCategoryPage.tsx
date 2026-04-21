@@ -44,7 +44,7 @@ export function IfoodCategoryPage() {
             >
               <h2 className="text-lg font-semibold text-slate-800">{item.nome}</h2>
               {item.descricao && <p className="mt-2 text-sm text-slate-600">{item.descricao}</p>}
-              {item.telefone && <p className="mt-3 text-xs font-semibold uppercase tracking-[0.18em] text-[#a77f14]">{item.telefone}</p>}
+              {item.telefone && <p className="mt-3 text-xs font-semibold uppercase tracking-[0.18em] text-emerald-600">{item.telefone}</p>}
             </button>
           ))
         )}

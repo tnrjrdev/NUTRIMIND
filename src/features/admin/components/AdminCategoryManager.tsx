@@ -203,14 +203,14 @@ export function AdminCategoryManager({ title, endpoint }: AdminCategoryManagerPr
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Buscar categoria por nome ou descricao"
-              className="w-full rounded-full border border-[#dfd0a0] bg-white py-3 pl-12 pr-4 text-sm text-[#2d2d2d] outline-none transition focus:border-[#c9ab42] focus:ring-2 focus:ring-[#e8d48d]"
+              className="w-full rounded-full border border-[#dfd0a0] bg-white py-3 pl-12 pr-4 text-sm text-slate-800 outline-none transition focus:border-[#c9ab42] focus:ring-2 focus:ring-emerald-200"
             />
           </div>
 
           <button
             type="button"
             onClick={openCreateModal}
-            className="inline-flex items-center justify-center gap-2 rounded-full bg-[#b89614] px-5 py-3 text-sm font-semibold text-white shadow-[0_12px_26px_rgba(146,112,11,0.2)] transition hover:bg-[#a58409]"
+            className="inline-flex items-center justify-center gap-2 rounded-full bg-emerald-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-500/20 transition hover:bg-emerald-600"
           >
             <PlusIcon />
             Nova categoria
@@ -226,7 +226,7 @@ export function AdminCategoryManager({ title, endpoint }: AdminCategoryManagerPr
 
       <div className="mt-6 space-y-3">
         {loading ? (
-          <div className="rounded-[24px] border border-[#eadfbe] bg-white px-5 py-8 text-center text-sm text-[#776f60]">
+          <div className="rounded-[24px] border border-slate-200 bg-white px-5 py-8 text-center text-sm text-[#776f60]">
             Carregando categorias...
           </div>
         ) : filteredCategories.length === 0 ? (
@@ -240,16 +240,16 @@ export function AdminCategoryManager({ title, endpoint }: AdminCategoryManagerPr
           filteredCategories.map((categoria) => (
             <article
               key={categoria.id}
-              className="flex flex-col gap-4 rounded-[24px] border border-[#eadfbe] bg-white px-5 py-4 shadow-[0_10px_28px_rgba(79,62,16,0.04)] transition hover:border-[#d8c270] hover:shadow-[0_16px_34px_rgba(79,62,16,0.07)] lg:flex-row lg:items-center lg:justify-between"
+              className="flex flex-col gap-4 rounded-[24px] border border-slate-200 bg-white px-5 py-4 shadow-[0_10px_28px_rgba(79,62,16,0.04)] transition hover:border-[#d8c270] hover:shadow-[0_16px_34px_rgba(79,62,16,0.07)] lg:flex-row lg:items-center lg:justify-between"
             >
               <div className="flex items-start gap-4">
-                <span className="mt-1 grid h-10 w-10 place-items-center rounded-full bg-[#f3e6bb] text-sm font-semibold text-[#8a6a08]">
+                <span className="mt-1 grid h-10 w-10 place-items-center rounded-full bg-emerald-50 text-sm font-semibold text-[#8a6a08]">
                   {String(categoria.ordemExibicao ?? 0).padStart(2, '0')}
                 </span>
 
                 <div>
                   <div className="flex flex-wrap items-center gap-2">
-                    <p className="text-base font-semibold text-[#2d2d2d]">{categoria.nome}</p>
+                    <p className="text-base font-semibold text-slate-800">{categoria.nome}</p>
                     <span
                       className={`rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] ${
                         categoria.ativo === false
@@ -273,7 +273,7 @@ export function AdminCategoryManager({ title, endpoint }: AdminCategoryManagerPr
                 <button
                   type="button"
                   onClick={() => handleEdit(categoria)}
-                  className="inline-flex items-center gap-2 rounded-full border border-[#d4c27b] bg-[#fbf6e4] px-4 py-2 text-sm font-semibold text-[#836509] transition hover:bg-[#f5ebc6]"
+                  className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-slate-50 px-4 py-2 text-sm font-semibold text-emerald-600 transition hover:bg-emerald-100"
                 >
                   <PencilIcon />
                   Editar
@@ -295,13 +295,13 @@ export function AdminCategoryManager({ title, endpoint }: AdminCategoryManagerPr
 
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-[rgba(30,25,14,0.38)] px-4 py-8 backdrop-blur-[2px]">
-          <div className="w-full max-w-2xl rounded-[32px] border border-[#dcc77c] bg-[linear-gradient(180deg,#fffdfa_0%,#f8f1df_100%)] p-6 shadow-[0_28px_80px_rgba(53,40,10,0.18)] sm:p-8">
+          <div className="w-full max-w-2xl rounded-[32px] border border-emerald-200 bg-slate-50 p-6 shadow-2xl shadow-emerald-900/5 sm:p-8">
             <div className="flex items-start justify-between gap-4">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#a4810d]">
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-emerald-600">
                   {editId ? 'Atualizacao' : 'Novo cadastro'}
                 </p>
-                <h4 className="mt-2 text-2xl font-semibold text-[#2b2b2b]">
+                <h4 className="mt-2 text-2xl font-semibold text-slate-800">
                   {editId ? 'Editar categoria' : 'Criar categoria'}
                 </h4>
                 <p className="mt-2 text-sm text-[#736c5d]">
@@ -312,7 +312,7 @@ export function AdminCategoryManager({ title, endpoint }: AdminCategoryManagerPr
               <button
                 type="button"
                 onClick={resetForm}
-                className="rounded-full border border-[#dbc46e] px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-[#896908] transition hover:bg-[#fbf3d7]"
+                className="rounded-full border border-[#dbc46e] px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-[#896908] transition hover:bg-emerald-100"
               >
                 Fechar
               </button>
@@ -327,7 +327,7 @@ export function AdminCategoryManager({ title, endpoint }: AdminCategoryManagerPr
                   required
                   value={formData.nome}
                   onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
-                  className="w-full rounded-[20px] border border-[#dccd98] bg-white px-4 py-3 text-sm text-[#2b2b2b] outline-none transition focus:border-[#c7a43b] focus:ring-2 focus:ring-[#ead58d]"
+                  className="w-full rounded-[20px] border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 outline-none transition focus:border-emerald-400 focus:ring-2 focus:ring-emerald-200"
                   placeholder="Ex: Refeicoes leves"
                 />
               </div>
@@ -340,7 +340,7 @@ export function AdminCategoryManager({ title, endpoint }: AdminCategoryManagerPr
                   value={formData.descricao}
                   onChange={(e) => setFormData({ ...formData, descricao: e.target.value })}
                   rows={4}
-                  className="w-full rounded-[20px] border border-[#dccd98] bg-white px-4 py-3 text-sm text-[#2b2b2b] outline-none transition focus:border-[#c7a43b] focus:ring-2 focus:ring-[#ead58d]"
+                  className="w-full rounded-[20px] border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 outline-none transition focus:border-emerald-400 focus:ring-2 focus:ring-emerald-200"
                   placeholder="Descreva rapidamente o uso dessa categoria."
                 />
               </div>
@@ -355,7 +355,7 @@ export function AdminCategoryManager({ title, endpoint }: AdminCategoryManagerPr
                     min="0"
                     value={formData.ordemExibicao}
                     onChange={(e) => setFormData({ ...formData, ordemExibicao: e.target.value })}
-                    className="w-full rounded-[20px] border border-[#dccd98] bg-white px-4 py-3 text-sm text-[#2b2b2b] outline-none transition focus:border-[#c7a43b] focus:ring-2 focus:ring-[#ead58d]"
+                    className="w-full rounded-[20px] border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 outline-none transition focus:border-emerald-400 focus:ring-2 focus:ring-emerald-200"
                   />
                 </div>
 
@@ -366,7 +366,7 @@ export function AdminCategoryManager({ title, endpoint }: AdminCategoryManagerPr
                       type="button"
                       onClick={() => setFormData({ ...formData, ativo: !formData.ativo })}
                       className={`relative h-7 w-14 rounded-full transition ${
-                        formData.ativo ? 'bg-[#b89614]' : 'bg-slate-300'
+                        formData.ativo ? 'bg-emerald-500' : 'bg-slate-300'
                       }`}
                       aria-pressed={formData.ativo}
                     >
@@ -381,7 +381,7 @@ export function AdminCategoryManager({ title, endpoint }: AdminCategoryManagerPr
                 </div>
               </div>
 
-              <div className="flex flex-col-reverse gap-3 border-t border-[#eadfbe] pt-5 sm:flex-row sm:justify-end">
+              <div className="flex flex-col-reverse gap-3 border-t border-slate-200 pt-5 sm:flex-row sm:justify-end">
                 <button
                   type="button"
                   onClick={resetForm}
@@ -392,7 +392,7 @@ export function AdminCategoryManager({ title, endpoint }: AdminCategoryManagerPr
                 <button
                   disabled={saving}
                   type="submit"
-                  className="rounded-full bg-[#b89614] px-6 py-3 text-sm font-semibold text-white shadow-[0_14px_28px_rgba(145,112,11,0.18)] transition hover:bg-[#a88709] disabled:opacity-60"
+                  className="rounded-full bg-emerald-500 px-6 py-3 text-sm font-semibold text-white shadow-xl shadow-emerald-500/20 transition hover:bg-emerald-600 disabled:opacity-60"
                 >
                   {saving ? 'Salvando...' : editId ? 'Atualizar categoria' : 'Criar categoria'}
                 </button>

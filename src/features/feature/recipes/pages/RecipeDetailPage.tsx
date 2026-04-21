@@ -336,26 +336,26 @@ export function RecipeDetailPage() {
     >
       <div className="space-y-6">
         <section className="grid gap-4 lg:grid-cols-[1.3fr_0.7fr]">
-          <div className="rounded-[28px] border border-[#eadfbe] bg-[linear-gradient(180deg,#fffdfa_0%,#f8f1df_100%)] p-5 shadow-[0_14px_36px_rgba(92,68,11,0.06)]">
+          <div className="rounded-[28px] border border-slate-200 bg-slate-50 p-5 shadow-xl shadow-slate-200/50">
             <div className="inline-flex items-center gap-2 rounded-full bg-[#f2e5bc] px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-[#9a790c]">
               <SparkIcon />
               Conteudo da receita
             </div>
-            <h2 className="mt-4 text-2xl font-semibold text-[#2d2d2d]">Organize ingredientes e modo de preparo no mesmo padrao</h2>
+            <h2 className="mt-4 text-2xl font-semibold text-slate-800">Organize ingredientes e modo de preparo no mesmo padrao</h2>
             <p className="mt-3 max-w-2xl text-sm leading-6 text-[#71695a]">
               Use as abas para manter o conteudo estruturado, com cadastro, edicao e exclusao dentro da mesma experiencia.
             </p>
           </div>
 
-          <div className="rounded-[28px] border border-[#eadfbe] bg-white p-5 shadow-[0_14px_36px_rgba(92,68,11,0.05)]">
+          <div className="rounded-[28px] border border-slate-200 bg-white p-5 shadow-lg shadow-slate-200/50">
             <div className="flex items-start justify-between gap-3">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#9f7d11]">Resumo</p>
-                <h3 className="mt-2 text-lg font-semibold text-[#2d2d2d]">
+                <h3 className="mt-2 text-lg font-semibold text-slate-800">
                   {activeTab === 'ingredientes' ? 'Ingredientes cadastrados' : 'Passos cadastrados'}
                 </h3>
               </div>
-              <span className="grid h-12 w-12 place-items-center rounded-[18px] bg-[#f4e7bf] text-[#8e6c09]">
+              <span className="grid h-12 w-12 place-items-center rounded-[18px] bg-[#f4e7bf] text-orange-500">
                 <BookIcon />
               </span>
             </div>
@@ -369,7 +369,7 @@ export function RecipeDetailPage() {
           </div>
         </section>
 
-        <section className="rounded-[28px] border border-[#eadfbe] bg-white p-5 shadow-[0_14px_36px_rgba(92,68,11,0.05)]">
+        <section className="rounded-[28px] border border-slate-200 bg-white p-5 shadow-lg shadow-slate-200/50">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <div className="flex flex-col gap-3 lg:min-w-[420px]">
               <div className="grid grid-cols-2 gap-3">
@@ -382,7 +382,7 @@ export function RecipeDetailPage() {
                   className={`rounded-full px-5 py-3 text-sm font-semibold transition ${
                     activeTab === 'ingredientes'
                       ? 'bg-[#f2e5bc] text-[#8f6e08] shadow-[0_10px_24px_rgba(146,112,11,0.12)]'
-                      : 'border border-[#ddcf9f] bg-[#fffdf8] text-[#6d665a] hover:bg-[#fbf6e4]'
+                      : 'border border-slate-200 bg-white text-slate-500 hover:bg-slate-50'
                   }`}
                 >
                   Ingredientes
@@ -396,14 +396,14 @@ export function RecipeDetailPage() {
                   className={`rounded-full px-5 py-3 text-sm font-semibold transition ${
                     activeTab === 'modo-preparo'
                       ? 'bg-[#f2e5bc] text-[#8f6e08] shadow-[0_10px_24px_rgba(146,112,11,0.12)]'
-                      : 'border border-[#ddcf9f] bg-[#fffdf8] text-[#6d665a] hover:bg-[#fbf6e4]'
+                      : 'border border-slate-200 bg-white text-slate-500 hover:bg-slate-50'
                   }`}
                 >
                   Modo de preparo
                 </button>
               </div>
               <div>
-                <h2 className="text-xl font-semibold text-[#2d2d2d]">
+                <h2 className="text-xl font-semibold text-slate-800">
                   {activeTab === 'ingredientes' ? 'Lista de ingredientes' : 'Etapas do preparo'}
                 </h2>
                 <p className="mt-1 text-sm text-[#776f61]">
@@ -417,7 +417,7 @@ export function RecipeDetailPage() {
             <button
               type="button"
               onClick={openCreateModal}
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-[#b89614] px-5 py-3 text-sm font-semibold text-white shadow-[0_12px_26px_rgba(146,112,11,0.2)] transition hover:bg-[#a58409]"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-emerald-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-500/20 transition hover:bg-emerald-600"
             >
               <PlusIcon />
               Adicionar
@@ -447,14 +447,14 @@ export function RecipeDetailPage() {
                   return (
                     <article
                       key={tabItem.id}
-                      className="rounded-[24px] border border-[#eadfbe] bg-[linear-gradient(180deg,#fffdfa_0%,#faf4e4_100%)] p-5 shadow-[0_12px_28px_rgba(98,74,13,0.05)]"
+                      className="rounded-[24px] border border-slate-200 bg-slate-50 p-5 shadow-md shadow-slate-200/50"
                     >
                       <button
                         type="button"
                         onClick={() => setSelectedItem(isSelected ? null : { id: tabItem.id, tab: activeTab })}
                         className="flex w-full items-start gap-4 text-left"
                       >
-                        <span className="flex h-11 min-w-11 items-center justify-center rounded-[16px] bg-[#f3e6bb] text-sm font-semibold text-[#8e6c09]">
+                        <span className="flex h-11 min-w-11 items-center justify-center rounded-[16px] bg-emerald-50 text-sm font-semibold text-orange-500">
                           {String(index + 1).padStart(2, '0')}
                         </span>
 
@@ -463,17 +463,17 @@ export function RecipeDetailPage() {
                           {tabItem.subtitle && <span className="mt-2 block text-sm leading-6 text-[#756e60]">{tabItem.subtitle}</span>}
                         </span>
 
-                        <span className="rounded-full border border-[#d8c26d] bg-white px-4 py-2 text-sm font-semibold text-[#7b620c]">
+                        <span className="rounded-full border border-[#d8c26d] bg-white px-4 py-2 text-sm font-semibold text-emerald-700">
                           {isSelected ? 'Ocultar acoes' : 'Mais acoes'}
                         </span>
                       </button>
 
                       {isSelected && (
-                        <div className="mt-4 grid gap-2 rounded-[20px] border border-[#eadfbe] bg-[#fff8e9] p-3 sm:grid-cols-2">
+                        <div className="mt-4 grid gap-2 rounded-[20px] border border-slate-200 bg-white p-3 sm:grid-cols-2">
                           <button
                             type="button"
                             onClick={openEditModal}
-                            className="inline-flex items-center justify-center gap-2 rounded-full border border-[#d4c27b] bg-white px-4 py-3 text-sm font-semibold text-[#836509] transition hover:bg-[#fbf6e4]"
+                            className="inline-flex items-center justify-center gap-2 rounded-full border border-emerald-200 bg-white px-4 py-3 text-sm font-semibold text-emerald-600 transition hover:bg-slate-50"
                           >
                             <PencilIcon />
                             Editar
@@ -499,13 +499,13 @@ export function RecipeDetailPage() {
 
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-[rgba(30,25,14,0.38)] px-4 py-8 backdrop-blur-[2px]">
-          <div className="w-full max-w-2xl rounded-[32px] border border-[#dcc77c] bg-[linear-gradient(180deg,#fffdfa_0%,#f8f1df_100%)] p-6 shadow-[0_28px_80px_rgba(53,40,10,0.18)] sm:p-8">
+          <div className="w-full max-w-2xl rounded-[32px] border border-emerald-200 bg-slate-50 p-6 shadow-2xl shadow-emerald-900/5 sm:p-8">
             <div className="flex items-start justify-between gap-4">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#a4810d]">
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-emerald-600">
                   {editItemId ? 'Atualizacao' : 'Novo cadastro'}
                 </p>
-                <h4 className="mt-2 text-2xl font-semibold text-[#2b2b2b]">
+                <h4 className="mt-2 text-2xl font-semibold text-slate-800">
                   {activeTab === 'ingredientes'
                     ? editItemId
                       ? 'Atualizar ingrediente'
@@ -524,7 +524,7 @@ export function RecipeDetailPage() {
               <button
                 type="button"
                 onClick={closeModal}
-                className="rounded-full border border-[#dbc46e] p-3 text-[#896908] transition hover:bg-[#fbf3d7]"
+                className="rounded-full border border-[#dbc46e] p-3 text-[#896908] transition hover:bg-emerald-100"
                 aria-label="Fechar modal"
               >
                 <CloseIcon />
@@ -540,7 +540,7 @@ export function RecipeDetailPage() {
                   required
                   value={formValue}
                   onChange={(e) => setFormValue(e.target.value)}
-                  className="w-full rounded-[20px] border border-[#dccd98] bg-white px-4 py-3 text-sm text-[#2b2b2b] outline-none transition focus:border-[#c7a43b] focus:ring-2 focus:ring-[#ead58d]"
+                  className="w-full rounded-[20px] border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 outline-none transition focus:border-emerald-400 focus:ring-2 focus:ring-emerald-200"
                   placeholder={activeTab === 'ingredientes' ? 'Digite o ingrediente' : 'Digite o modo de preparo'}
                 />
               </div>
@@ -555,13 +555,13 @@ export function RecipeDetailPage() {
                     min="1"
                     value={formOrder}
                     onChange={(e) => setFormOrder(e.target.value)}
-                    className="w-full rounded-[20px] border border-[#dccd98] bg-white px-4 py-3 text-sm text-[#2b2b2b] outline-none transition focus:border-[#c7a43b] focus:ring-2 focus:ring-[#ead58d]"
+                    className="w-full rounded-[20px] border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 outline-none transition focus:border-emerald-400 focus:ring-2 focus:ring-emerald-200"
                     placeholder={`Ex: ${item.modosPreparo.length + 1}`}
                   />
                 </div>
               )}
 
-              <div className="flex flex-col-reverse gap-3 border-t border-[#eadfbe] pt-5 sm:flex-row sm:justify-end">
+              <div className="flex flex-col-reverse gap-3 border-t border-slate-200 pt-5 sm:flex-row sm:justify-end">
                 <button
                   type="button"
                   onClick={closeModal}
@@ -572,7 +572,7 @@ export function RecipeDetailPage() {
                 <button
                   disabled={saving}
                   type="submit"
-                  className="inline-flex items-center justify-center gap-2 rounded-full bg-[#b89614] px-6 py-3 text-sm font-semibold text-white shadow-[0_14px_28px_rgba(145,112,11,0.18)] transition hover:bg-[#a88709] disabled:opacity-60"
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-emerald-500 px-6 py-3 text-sm font-semibold text-white shadow-xl shadow-emerald-500/20 transition hover:bg-emerald-600 disabled:opacity-60"
                 >
                   <PlusIcon />
                   {saving ? 'Salvando...' : editItemId ? 'Atualizar' : 'Cadastrar'}

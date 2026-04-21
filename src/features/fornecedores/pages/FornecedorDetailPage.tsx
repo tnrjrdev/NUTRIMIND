@@ -104,24 +104,24 @@ export function FornecedorDetailPage() {
     >
       <div className="space-y-6">
         <section className="grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
-          <div className="rounded-[28px] border border-[#eadfbe] bg-[linear-gradient(180deg,#fffdfa_0%,#f8f1df_100%)] p-5 shadow-[0_14px_36px_rgba(92,68,11,0.06)]">
+          <div className="rounded-[28px] border border-slate-200 bg-slate-50 p-5 shadow-xl shadow-slate-200/50">
             <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#9a790c]">Resumo do parceiro</p>
-            <h2 className="mt-3 text-2xl font-semibold text-[#2d2d2d]">{item.descricaoCurta || 'Fornecedor parceiro da base Nutrimind'}</h2>
+            <h2 className="mt-3 text-2xl font-semibold text-slate-800">{item.descricaoCurta || 'Fornecedor parceiro da base Nutrimind'}</h2>
             <p className="mt-3 text-sm leading-6 text-[#71695a]">
               {item.descricaoDetalhada || 'Sem descricao detalhada cadastrada para este fornecedor.'}
             </p>
           </div>
 
-          <div className="rounded-[28px] border border-[#eadfbe] bg-white p-5 shadow-[0_14px_36px_rgba(92,68,11,0.05)]">
+          <div className="rounded-[28px] border border-slate-200 bg-white p-5 shadow-lg shadow-slate-200/50">
             <div className="flex items-start justify-between gap-3">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#9f7d11]">Categoria</p>
-                <h3 className="mt-2 text-lg font-semibold text-[#2d2d2d]">{item.categoria?.nome || 'Sem categoria'}</h3>
+                <h3 className="mt-2 text-lg font-semibold text-slate-800">{item.categoria?.nome || 'Sem categoria'}</h3>
               </div>
               <button
                 type="button"
                 onClick={() => navigate(-1)}
-                className="rounded-full border border-[#d8c26d] bg-white px-4 py-2 text-sm font-semibold text-[#7b620c] transition hover:bg-[#fbf6e4]"
+                className="rounded-full border border-[#d8c26d] bg-white px-4 py-2 text-sm font-semibold text-emerald-700 transition hover:bg-slate-50"
               >
                 Voltar
               </button>
@@ -134,14 +134,14 @@ export function FornecedorDetailPage() {
         </section>
 
         <section className="grid gap-6 lg:grid-cols-[1fr_0.95fr]">
-          <div className="rounded-[28px] border border-[#eadfbe] bg-white p-5 shadow-[0_14px_36px_rgba(92,68,11,0.05)]">
+          <div className="rounded-[28px] border border-slate-200 bg-white p-5 shadow-lg shadow-slate-200/50">
             <div className="flex items-center gap-3">
-              <span className="grid h-11 w-11 place-items-center rounded-[16px] bg-[#f4e7bf] text-[#8e6c09]">
+              <span className="grid h-11 w-11 place-items-center rounded-[16px] bg-[#f4e7bf] text-orange-500">
                 <ContactIcon />
               </span>
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#9f7d11]">Contato</p>
-                <h3 className="mt-1 text-lg font-semibold text-[#2d2d2d]">Informacoes principais</h3>
+                <h3 className="mt-1 text-lg font-semibold text-slate-800">Informacoes principais</h3>
               </div>
             </div>
 
@@ -152,7 +152,7 @@ export function FornecedorDetailPage() {
                 contatos.map((contato) => (
                   <div
                     key={`${contato.label}-${contato.value}`}
-                    className="rounded-[20px] border border-[#eadfbe] bg-[linear-gradient(180deg,#fffdfa_0%,#faf4e4_100%)] px-4 py-4"
+                    className="rounded-[20px] border border-slate-200 bg-slate-50 px-4 py-4"
                   >
                     <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#9f7d11]">{contato.label}</p>
                     <p className="mt-2 text-sm text-[#5f574a]">{contato.value}</p>
@@ -162,14 +162,14 @@ export function FornecedorDetailPage() {
             </div>
           </div>
 
-          <div className="rounded-[28px] border border-[#eadfbe] bg-white p-5 shadow-[0_14px_36px_rgba(92,68,11,0.05)]">
+          <div className="rounded-[28px] border border-slate-200 bg-white p-5 shadow-lg shadow-slate-200/50">
             <div className="flex items-center gap-3">
-              <span className="grid h-11 w-11 place-items-center rounded-[16px] bg-[#f4e7bf] text-[#8e6c09]">
+              <span className="grid h-11 w-11 place-items-center rounded-[16px] bg-[#f4e7bf] text-orange-500">
                 <TicketIcon />
               </span>
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#9f7d11]">Cupons</p>
-                <h3 className="mt-1 text-lg font-semibold text-[#2d2d2d]">Ofertas disponiveis</h3>
+                <h3 className="mt-1 text-lg font-semibold text-slate-800">Ofertas disponiveis</h3>
               </div>
             </div>
 
@@ -180,12 +180,12 @@ export function FornecedorDetailPage() {
                 item.cupons.map((cupom) => (
                   <div
                     key={cupom.id}
-                    className="rounded-[20px] border border-[#eadfbe] bg-[linear-gradient(180deg,#fffdfa_0%,#faf4e4_100%)] px-4 py-4"
+                    className="rounded-[20px] border border-slate-200 bg-slate-50 px-4 py-4"
                   >
                     <div className="flex items-center justify-between gap-3">
-                      <p className="text-base font-semibold text-[#2d2d2d]">{cupom.codigo}</p>
+                      <p className="text-base font-semibold text-slate-800">{cupom.codigo}</p>
                       {cupom.validade && (
-                        <span className="rounded-full bg-[#f4e7bf] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#8e6c09]">
+                        <span className="rounded-full bg-[#f4e7bf] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-orange-500">
                           Ate {new Date(cupom.validade).toLocaleDateString('pt-BR')}
                         </span>
                       )}
@@ -199,14 +199,14 @@ export function FornecedorDetailPage() {
         </section>
 
         {(item.site || item.instagram) && (
-          <section className="rounded-[28px] border border-[#eadfbe] bg-white p-5 shadow-[0_14px_36px_rgba(92,68,11,0.05)]">
+          <section className="rounded-[28px] border border-slate-200 bg-white p-5 shadow-lg shadow-slate-200/50">
             <div className="flex items-center gap-3">
-              <span className="grid h-11 w-11 place-items-center rounded-[16px] bg-[#f4e7bf] text-[#8e6c09]">
+              <span className="grid h-11 w-11 place-items-center rounded-[16px] bg-[#f4e7bf] text-orange-500">
                 <GlobeIcon />
               </span>
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#9f7d11]">Links</p>
-                <h3 className="mt-1 text-lg font-semibold text-[#2d2d2d]">Canais digitais</h3>
+                <h3 className="mt-1 text-lg font-semibold text-slate-800">Canais digitais</h3>
               </div>
             </div>
 
@@ -216,7 +216,7 @@ export function FornecedorDetailPage() {
                   href={item.instagram.startsWith('http') ? item.instagram : `https://instagram.com/${item.instagram.replace('@', '')}`}
                   target="_blank"
                   rel="noreferrer"
-                  className="rounded-full border border-[#d8c26d] bg-white px-4 py-2 text-sm font-semibold text-[#7b620c] transition hover:bg-[#fbf6e4]"
+                  className="rounded-full border border-[#d8c26d] bg-white px-4 py-2 text-sm font-semibold text-emerald-700 transition hover:bg-slate-50"
                 >
                   Instagram
                 </a>
@@ -226,7 +226,7 @@ export function FornecedorDetailPage() {
                   href={item.site}
                   target="_blank"
                   rel="noreferrer"
-                  className="rounded-full border border-[#d8c26d] bg-white px-4 py-2 text-sm font-semibold text-[#7b620c] transition hover:bg-[#fbf6e4]"
+                  className="rounded-full border border-[#d8c26d] bg-white px-4 py-2 text-sm font-semibold text-emerald-700 transition hover:bg-slate-50"
                 >
                   Acessar site
                 </a>

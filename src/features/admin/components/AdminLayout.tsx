@@ -25,7 +25,7 @@ export function AdminLayout() {
     <div className="flex h-screen bg-gray-50">
       <aside className="w-64 bg-slate-900 flex flex-col text-white">
         <div className="flex flex-col items-center justify-center p-6 border-b border-slate-800">
-          <h1 className="text-xl font-bold tracking-[0.2em] text-[#b78b03]">NUTRIMIND</h1>
+          <h1 className="text-xl font-bold tracking-[0.2em] text-emerald-500">NUTRIMIND</h1>
           <span className="text-[0.65rem] text-slate-400 mt-1 uppercase tracking-widest">Painel Admin</span>
         </div>
         <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto custom-scrollbar">
@@ -56,7 +56,7 @@ export function AdminLayout() {
       <main className="flex-1 flex flex-col overflow-hidden">
         <header className="bg-white shadow-sm border-b border-slate-200 flex justify-between items-center px-8 py-4">
           <h2 className="text-lg font-semibold text-gray-800">Gerenciamento</h2>
-          <a href="/" target="_blank" rel="noreferrer" className="text-sm font-medium text-[#b78b03] hover:underline">Ver Site (Nova Aba)</a>
+          <a href="/" target="_blank" rel="noreferrer" className="text-sm font-medium text-emerald-500 hover:underline">Ver Site (Nova Aba)</a>
         </header>
 
         <div className="flex-1 overflow-auto p-8 bg-[#f8f5ef]/50">

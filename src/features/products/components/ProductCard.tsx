@@ -70,7 +70,7 @@ export function ProductCard({ product }: ProductCardProps) {
       <div className="mt-6 min-h-[88px]">
         <h3 className="text-base font-semibold leading-7 text-[#20212c]">{product.name}</h3>
         <p className="mt-2 text-sm text-[#6b7280]">{product.description}</p>
-        <p className="mt-3 text-lg font-bold text-[#8d6b18]">R$ {product.price.toFixed(2)}</p>
+        <p className="mt-3 text-lg font-bold text-emerald-800">R$ {product.price.toFixed(2)}</p>
       </div>
       <div className="mt-auto flex items-center justify-between gap-3 pt-4">
         <span className={`inline-flex items-center gap-2 rounded-full px-3 py-2 text-xs font-semibold uppercase tracking-[0.24em] ${
@@ -80,7 +80,7 @@ export function ProductCard({ product }: ProductCardProps) {
         }`}>
           {product.inStock ? 'Em estoque' : 'Indisponível'}
         </span>
-        <span className="text-xl font-semibold text-[#8d6b18] transition group-hover:translate-x-1">›</span>
+        <span className="text-xl font-semibold text-emerald-800 transition group-hover:translate-x-1">›</span>
       </div>
     </article>
   );

@@ -45,7 +45,7 @@ export function ProtectedRoute() {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[#f8f5ef] px-4">
         <div className="rounded-[28px] bg-white px-8 py-6 text-center shadow-[0_18px_50px_rgba(15,23,42,0.1)] ring-1 ring-slate-200">
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#b78b03]">nutrimind</p>
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-emerald-500">nutrimind</p>
           <p className="mt-3 text-sm text-slate-500">Verificando sua sessao...</p>
         </div>
       </div>

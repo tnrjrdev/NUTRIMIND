@@ -62,7 +62,7 @@ export function HomeHeader({ user }: HomeHeaderProps) {
             </div>
           )}
           <div>
-            <p className="text-sm font-semibold text-[#2d2d2d]">Perfil</p>
+            <p className="text-sm font-semibold text-slate-800">Perfil</p>
             <p className="text-xs text-[#6b7280]">Acesse suas receitas e atalhos</p>
             <button
               type="button"

@@ -53,12 +53,12 @@ export function RegisterPage() {
         <div className="flex items-center justify-center px-6 py-10 sm:px-12 sm:py-14">
           <div className="w-full max-w-[320px]">
             <div className="mb-6 text-center">
-              <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full border border-[#b78b03]/25 bg-[#fbf2d5] text-[#b78b03] shadow-sm">
+              <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full border border-[#b78b03]/25 bg-[#fbf2d5] text-emerald-500 shadow-sm">
                 <svg viewBox="0 0 64 64" className="h-6 w-6" fill="currentColor">
                   <path d="M32 4c-8.3 0-15 6.7-15 15 0 2 .4 4 1.1 5.8C13.8 25.7 10 31.4 10 37.8c0 9.4 7.6 17 17 17 1.9 0 3.8-.3 5.5-.8 1.5 1 3.4 1.6 5.4 1.6 5.9 0 10.8-3.8 12.6-9.1 1.6-4.6 1.2-9.7-1-14.1C55.3 29 60 23 60 16 60 8.1 51.9 4 44 4c-3.9 0-7.7 1.6-10.4 4.4C31.7 5.6 33.8 4 32 4z" />
                 </svg>
               </div>
-              <h1 className="text-[2.1rem] font-light tracking-[0.22em] text-[#b78b03]">nutrimind</h1>
+              <h1 className="text-[2.1rem] font-light tracking-[0.22em] text-emerald-500">nutrimind</h1>
               <p className="mt-3 text-sm text-slate-500">Crie sua conta para acessar o painel.</p>
             </div>
 
@@ -98,7 +98,7 @@ export function RegisterPage() {
 
             <p className="mt-4 text-center text-sm text-slate-500">
               Já tem conta?{' '}
-              <Link to="/login" className="font-semibold text-[#b78b03] hover:underline">
+              <Link to="/login" className="font-semibold text-emerald-500 hover:underline">
                 Entrar
               </Link>
             </p>

@@ -45,7 +45,7 @@ export function IfoodPage() {
                 <span className="block text-base">{category.nome}</span>
                 {category.descricao && <span className="mt-1 block text-xs text-slate-500">{category.descricao}</span>}
               </span>
-              <span className="text-lg font-semibold text-[#8d6b18]">›</span>
+              <span className="text-lg font-semibold text-emerald-800">›</span>
             </button>
           ))
         )}

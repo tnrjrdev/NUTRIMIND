@@ -117,44 +117,39 @@ export function AppSidebar() {
   };
 
   return (
-    <aside className="w-full border-b border-[#eee4c7] bg-[#f7f1de] px-4 py-5 lg:max-w-[290px] lg:border-b-0 lg:border-r lg:px-5">
-      <div className="rounded-[24px] border border-[#e2d3a0] bg-white px-5 py-6">
-        <p className="max-w-full overflow-hidden font-serif text-[clamp(1.65rem,2.5vw,2.2rem)] uppercase leading-none tracking-[0.01em] text-[#b08f13]">
+    <aside className="flex w-full flex-col border-b border-emerald-500 bg-emerald-600 px-4 py-5 lg:max-w-[290px] lg:border-b-0 lg:border-r lg:px-5">
+      <div className="rounded-2xl border border-emerald-500 bg-emerald-700/30 px-4 py-6 text-center">
+        <p className="max-w-full overflow-hidden font-serif text-[clamp(1.65rem,2.5vw,2.2rem)] uppercase leading-none tracking-[0.01em] text-yellow-300">
           nutrimind
         </p>
-        <p className="mt-2 text-xs uppercase tracking-[0.24em] text-[#8f7d40]">por Tina Hartmann</p>
+        <p className="mt-2 text-xs uppercase tracking-[0.24em] text-emerald-100">por Tina Hartmann</p>
       </div>
 
-      <div className="mt-5 rounded-[24px] border border-[#e6d8a9] bg-white px-4 py-4">
+      <div className="mt-6 rounded-2xl border border-emerald-500 bg-emerald-700/30 px-4 py-4">
         <div className="flex items-center gap-3">
-          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#f4e9bf] text-base font-semibold text-[#8b6c08]">
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500 text-base font-semibold text-yellow-300">
             {getInitials(currentUserName) || 'NM'}
           </div>
           <div className="min-w-0">
-            <p className="truncate text-sm font-semibold text-[#272727]">{currentUserName}</p>
-            <p className="truncate text-xs text-[#777164]">{currentUserEmail}</p>
-            <p className="mt-1 text-[11px] uppercase tracking-[0.16em] text-[#a2810e]">{getGreeting()}</p>
+            <p className="truncate text-sm font-semibold text-white">{currentUserName}</p>
+            <p className="truncate text-xs text-emerald-100">{currentUserEmail}</p>
+            <p className="mt-1 text-[11px] uppercase tracking-[0.16em] text-yellow-300">{getGreeting()}</p>
           </div>
         </div>
 
         <button
           type="button"
           onClick={handleLogout}
-          className="mt-4 rounded-full border border-[#d7c26e] px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-[#896908] transition hover:bg-[#fbf5dc]"
+          className="mt-4 w-full rounded-xl border border-emerald-400 px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-emerald-50 transition hover:bg-emerald-500 hover:text-white"
         >
           Sair
         </button>
       </div>
 
-      <div className="mt-5 rounded-[24px] bg-[#b89a1c] px-4 py-4 text-white">
-        <p className="text-xs uppercase tracking-[0.2em] text-white/75">Mensagens</p>
-        <div className="mt-2 flex items-end justify-between gap-3">
-          <p className="text-3xl font-semibold">22</p>
-          <p className="text-xs text-white/80">Atualizacoes do dia</p>
-        </div>
-      </div>
-
-      <nav className="mt-5 grid gap-2">
+      <nav className="mt-6 grid gap-1.5 flex-1">
+        <p className="mb-2 pl-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-emerald-200">
+          Menu Principal
+        </p>
         {menuItems.map((item) => {
           const isActive = location.pathname === item.path || (item.path !== '/home' && location.pathname.startsWith(item.path));
 
@@ -163,20 +158,30 @@ export function AppSidebar() {
               key={item.id}
               type="button"
               onClick={() => navigate(item.path)}
-              className={`flex items-center gap-3 rounded-[16px] px-4 py-3 text-left transition ${
+              className={`flex items-center gap-3 rounded-xl px-4 py-3 text-left transition ${
                 isActive
-                  ? 'border border-[#dcca8a] bg-white text-[#6f5608]'
-                  : 'bg-[#b89a1c] text-white hover:bg-[#a88912]'
+                  ? 'bg-emerald-500 text-yellow-300 shadow-md shadow-emerald-700/20'
+                  : 'text-emerald-50 hover:bg-emerald-500/50 hover:text-white'
               }`}
             >
-              <span className={`grid h-9 w-9 place-items-center rounded-full ${isActive ? 'bg-[#f7edc8]' : 'bg-white/12'}`}>
-                <DashboardIcon icon={item.icon} />
+              <span className={`grid h-8 w-8 place-items-center rounded-lg ${isActive ? 'bg-yellow-400/20' : 'bg-transparent'}`}>
+                <DashboardIcon icon={item.icon} className="h-5 w-5" />
               </span>
-              <span className="text-sm font-semibold">{item.label}</span>
+              <span className="text-sm font-medium">{item.label}</span>
             </button>
           );
         })}
       </nav>
+
+      <div className="mt-6">
+        <div className="rounded-2xl border border-orange-400/30 bg-orange-500/20 px-4 py-4 text-orange-200">
+          <p className="text-xs uppercase tracking-[0.2em] opacity-90">Mensagens</p>
+          <div className="mt-2 flex items-end justify-between gap-3">
+            <p className="text-3xl font-semibold text-orange-300">22</p>
+            <p className="text-xs opacity-90">Atualizações</p>
+          </div>
+        </div>
+      </div>
     </aside>
   );
 }

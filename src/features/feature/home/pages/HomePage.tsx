@@ -172,106 +172,105 @@ export function HomePage() {
 
   return (
     <AppShell>
-          <header className="rounded-[28px] border border-[#eadfbf] bg-[linear-gradient(135deg,#c6ab34_0%,#b89615_100%)] px-5 py-6 text-white sm:px-7">
-            <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+          <header className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-400 px-6 py-8 text-white sm:px-10 shadow-lg shadow-emerald-500/20">
+            <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-yellow-300/20 blur-3xl"></div>
+            <div className="absolute -left-20 -bottom-20 h-64 w-64 rounded-full bg-blue-300/20 blur-3xl"></div>
+            <div className="relative z-10 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
               <div>
-                <p className="text-xs uppercase tracking-[0.24em] text-white/75">{getGreeting()}</p>
-                <h1 className="mt-2 text-3xl font-semibold tracking-[0.02em] sm:text-4xl">Gestao de pacientes</h1>
-                <p className="mt-3 max-w-2xl text-sm leading-6 text-white/84 sm:text-base">
-                  Acesse seus modulos principais, acompanhe os numeros do sistema e continue sua rotina com mais clareza.
+                <p className="text-xs uppercase tracking-[0.24em] text-yellow-200 drop-shadow-sm">{getGreeting()}</p>
+                <h1 className="mt-2 text-3xl font-semibold tracking-tight text-white sm:text-4xl drop-shadow-sm">Gestão de pacientes</h1>
+                <p className="mt-3 max-w-2xl text-sm leading-relaxed text-emerald-50 sm:text-base">
+                  Acesse seus módulos principais, acompanhe os números do sistema e continue sua rotina com mais clareza.
                 </p>
               </div>
 
-              <div className="rounded-[20px] border border-white/20 bg-white/10 px-4 py-3 backdrop-blur-sm">
-                <p className="text-xs uppercase tracking-[0.2em] text-white/70">Hoje</p>
-                <p className="mt-1 text-base font-semibold capitalize">{formatDateLabel()}</p>
+              <div className="rounded-xl border border-white/20 bg-white/10 px-5 py-4 backdrop-blur-md shadow-sm">
+                <p className="text-xs uppercase tracking-[0.2em] text-emerald-100">Hoje</p>
+                <p className="mt-1 text-base font-medium capitalize text-white">{formatDateLabel()}</p>
               </div>
             </div>
           </header>
 
-          <section className="mt-6">
+          <section className="mt-8">
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <h2 className="text-xl font-semibold text-[#272727]">Resumo rapido</h2>
-                <p className="text-sm text-[#756f61]">Numeros principais para orientar sua navegacao.</p>
+                <h2 className="text-xl font-semibold text-slate-800">Resumo rápido</h2>
+                <p className="text-sm text-slate-500">Números principais para orientar sua navegação.</p>
               </div>
-              <span className="rounded-full bg-[#efe4ba] px-3 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-[#7c620a]">
+              <span className="rounded-full bg-emerald-50 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-emerald-600">
                 {loadingStats ? 'Carregando' : 'Atualizado'}
               </span>
             </div>
 
-            <div className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            <div className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
               {statCards.map((card) => (
-                <article key={card.label} className="rounded-[24px] border border-[#ebe1c2] bg-white p-5 shadow-[0_8px_24px_rgba(72,58,17,0.05)]">
+                <article key={card.label} className="group rounded-2xl border border-slate-200 bg-white p-5 transition-all duration-300 hover:-translate-y-1 hover:border-emerald-300 hover:shadow-xl hover:shadow-emerald-500/10">
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <p className="text-sm text-[#6e685b]">{card.label}</p>
-                      <p className="mt-3 text-4xl font-semibold tracking-tight text-[#1f2531]">
+                      <p className="text-sm font-medium text-slate-500">{card.label}</p>
+                      <p className="mt-3 text-4xl font-semibold tracking-tight text-slate-800">
                         {loadingStats ? '--' : card.value}
                       </p>
                     </div>
-                    <span className="grid h-11 w-11 place-items-center rounded-[14px] bg-[#f3e7bd] text-[#8e6c09]">
+                    <span className="grid h-12 w-12 place-items-center rounded-xl bg-orange-50 text-orange-500 transition-colors group-hover:bg-orange-100">
                       <DashboardIcon icon={card.icon} className="h-6 w-6" />
                     </span>
                   </div>
-                  <p className="mt-4 text-sm text-[#7c7566]">{card.helper}</p>
+                  <p className="mt-4 text-sm text-slate-400">{card.helper}</p>
                 </article>
               ))}
             </div>
           </section>
 
-          <div className="mt-6 grid gap-6 xl:grid-cols-[1.35fr_0.95fr]">
-            <section className="rounded-[26px] border border-[#ebe1c2] bg-white p-5 shadow-[0_8px_24px_rgba(72,58,17,0.05)] sm:p-6">
+          <div className="mt-8 grid gap-6 xl:grid-cols-[1.35fr_0.95fr]">
+            <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
               <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                  <h2 className="text-xl font-semibold text-[#272727]">Acesso rapido</h2>
-                  <p className="text-sm text-[#756f61]">Modulos mais usados reunidos em um so lugar.</p>
+                  <h2 className="text-xl font-semibold text-slate-800">Acesso rápido</h2>
+                  <p className="text-sm text-slate-500">Módulos mais usados reunidos em um só lugar.</p>
                 </div>
-                <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#9d7c10]">
-                  {menuShortcuts.length} modulos
-                </span>
               </div>
 
-              <div className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+              <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
                 {menuShortcuts.map((item) => (
                   <button
                     key={item.id}
                     type="button"
                     onClick={() => item.path && navigate(item.path)}
-                    className="rounded-[20px] border border-[#efe4c6] bg-[#fcfaf4] p-4 text-left transition hover:-translate-y-0.5 hover:border-[#d9c16a] hover:bg-white"
+                    className="group rounded-xl border border-slate-100 bg-slate-50/50 p-4 text-left transition-all duration-300 hover:-translate-y-1 hover:border-emerald-200 hover:bg-white hover:shadow-lg hover:shadow-emerald-500/10"
                   >
-                    <span className="grid h-12 w-12 place-items-center rounded-[16px] bg-[#f2e8c3] text-[#8b6909]">
+                    <span className="grid h-12 w-12 place-items-center rounded-lg bg-white text-emerald-500 shadow-sm transition-colors group-hover:bg-emerald-50">
                       <DashboardIcon icon={item.icon} className="h-6 w-6" />
                     </span>
-                    <p className="mt-4 text-base font-semibold text-[#2c2c2c]">{item.label}</p>
-                    <p className="mt-1 text-sm text-[#756f61]">Abrir modulo e continuar a consulta.</p>
+                    <p className="mt-4 text-sm font-semibold text-slate-800">{item.label}</p>
+                    <p className="mt-1 text-xs text-slate-500">Abrir módulo e continuar consulta.</p>
                   </button>
                 ))}
               </div>
             </section>
 
-            <section className="rounded-[26px] border border-[#ebe1c2] bg-white p-5 shadow-[0_8px_24px_rgba(72,58,17,0.05)] sm:p-6">
+            <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
               <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                  <h2 className="text-xl font-semibold text-[#272727]">Receitas em destaque</h2>
-                  <p className="text-sm text-[#756f61]">
+                  <h2 className="text-xl font-semibold text-slate-800">Receitas em destaque</h2>
+                  <p className="text-sm text-slate-500">
                     {showAllFeatured
                       ? 'Todas as receitas marcadas como destaque.'
-                      : 'Receitas mais recentes para retomada rapida.'}
+                      : 'Receitas mais recentes para retomada rápida.'}
                   </p>
                 </div>
                 <button
                   type="button"
                   onClick={() => setShowAllFeatured((current) => !current)}
-                  className="text-sm font-semibold text-[#9b7a0f] transition hover:text-[#7c6108]"
+                  className="text-sm font-semibold text-emerald-600 transition hover:text-emerald-700"
                 >
                   {showAllFeatured ? 'Ver recentes' : 'Ver todas'}
                 </button>
               </div>
 
-              <div className="mt-5 space-y-3">
+              <div className="mt-6 space-y-3">
                 {recipesToShow.length === 0 ? (
-                  <div className="rounded-[20px] border border-[#efe4c6] bg-[#fcfaf4] px-4 py-6 text-sm text-[#756f61]">
+                  <div className="rounded-xl border border-slate-100 bg-slate-50 px-4 py-6 text-center text-sm text-slate-500">
                     {showAllFeatured
                       ? 'Nenhuma receita em destaque encontrada no momento.'
                       : 'Nenhuma receita recente encontrada no momento.'}
@@ -282,19 +281,19 @@ export function HomePage() {
                       key={recipe.id}
                       type="button"
                       onClick={() => navigate(`/receitas/${recipe.id}`)}
-                      className="flex w-full items-center gap-4 rounded-[20px] border border-[#efe4c6] bg-[#fcfaf4] px-4 py-4 text-left transition hover:border-[#d9c16a] hover:bg-white"
+                      className="group flex w-full items-center gap-4 rounded-xl border border-slate-100 bg-slate-50/50 px-4 py-4 text-left transition-all hover:border-emerald-200 hover:bg-white hover:shadow-md"
                     >
-                      <span className="flex h-11 w-11 items-center justify-center rounded-[14px] bg-[#b89a1c] text-sm font-semibold text-white">
+                      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-emerald-100 text-sm font-semibold text-emerald-600 group-hover:bg-emerald-500 group-hover:text-white transition-colors">
                         {String(index + 1).padStart(2, '0')}
                       </span>
-                      <div className="min-w-0">
-                        <p className="truncate text-sm font-semibold uppercase tracking-[0.03em] text-[#2c2c2c]">
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-sm font-semibold uppercase tracking-[0.03em] text-slate-800">
                           {recipe.nome}
                         </p>
-                        <p className="mt-1 text-sm text-[#756f61]">
+                        <p className="mt-1 truncate text-xs text-slate-500">
                           {showAllFeatured
-                            ? 'Receita marcada como destaque para acesso rapido.'
-                            : 'Continue a navegacao a partir das receitas mais recentes.'}
+                            ? 'Receita marcada como destaque para acesso rápido.'
+                            : 'Continue a navegação a partir das receitas mais recentes.'}
                         </p>
                       </div>
                     </button>
@@ -303,39 +302,9 @@ export function HomePage() {
               </div>
             </section>
           </div>
-
-          <section className="mt-6 rounded-[26px] border border-[#ebe1c2] bg-white p-5 shadow-[0_8px_24px_rgba(72,58,17,0.05)] sm:p-6">
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <h2 className="text-xl font-semibold text-[#272727]">Organizacao visual</h2>
-                <p className="text-sm text-[#756f61]">Menos ruído, mais leitura e navegação objetiva.</p>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                <span className="rounded-full bg-[#f4ecd0] px-3 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-[#886808]">
-                  UX
-                </span>
-                <span className="rounded-full bg-[#f4ecd0] px-3 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-[#886808]">
-                  UI
-                </span>
-              </div>
-            </div>
-
-            <div className="mt-5 grid gap-4 md:grid-cols-3">
-              <article className="rounded-[20px] bg-[#fbf8ef] p-4">
-                <p className="text-sm font-semibold text-[#2d2d2d]">Hierarquia clara</p>
-                <p className="mt-2 text-sm leading-6 text-[#756f61]">Topo com contexto, cards com leitura imediata e atalhos separados por prioridade.</p>
-              </article>
-              <article className="rounded-[20px] bg-[#fbf8ef] p-4">
-                <p className="text-sm font-semibold text-[#2d2d2d]">Acoes proximas</p>
-                <p className="mt-2 text-sm leading-6 text-[#756f61]">O usuario entende rapido onde clicar para continuar a rotina sem ficar procurando no layout.</p>
-              </article>
-              <article className="rounded-[20px] bg-[#fbf8ef] p-4">
-                <p className="text-sm font-semibold text-[#2d2d2d]">Visual equilibrado</p>
-                <p className="mt-2 text-sm leading-6 text-[#756f61]">Mantive a identidade dourada, mas com contraste melhor, mais respiro e menos peso visual.</p>
-              </article>
-            </div>
-          </section>
-          <AppFooter />
+          <div className="mt-8 pb-4">
+            <AppFooter />
+          </div>
     </AppShell>
   );
 }

@@ -63,17 +63,17 @@ export function ProductCategoryCard({ category }: ProductCategoryCardProps) {
       className="flex w-full items-center justify-between rounded-[22px] border border-transparent bg-[#f7eed5] px-5 py-5 text-left text-sm font-semibold text-[#3f3b34] shadow-[0_10px_30px_rgba(145,101,21,0.08)] transition hover:bg-[#f2e6c5]"
     >
       <span className="inline-flex items-center gap-3">
-        <span className="grid h-10 w-10 place-items-center rounded-full bg-[#e9d9a5] text-[#8d6b18] shadow-sm">
+        <span className="grid h-10 w-10 place-items-center rounded-full bg-[#e9d9a5] text-emerald-800 shadow-sm">
           {getIcon(category.icon)}
         </span>
         <div>
           <span>{category.name}</span>
-          <span className="ml-2 text-xs text-[#8d6b18] font-normal">
+          <span className="ml-2 text-xs text-emerald-800 font-normal">
             ({category.productCount} produtos)
           </span>
         </div>
       </span>
-      <span className="text-lg font-semibold text-[#8d6b18]">›</span>
+      <span className="text-lg font-semibold text-emerald-800">›</span>
     </button>
   );
 }
