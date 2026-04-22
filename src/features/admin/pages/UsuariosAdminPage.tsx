@@ -151,7 +151,7 @@ export function UsuariosAdminPage() {
           <button
             disabled={loading}
             type="submit"
-            className="w-full rounded bg-[#b78b03] py-3 font-semibold text-white disabled:opacity-50"
+            className="w-full rounded bg-emerald-500 py-3 font-semibold text-white disabled:opacity-50"
           >
             {loading ? 'Salvando...' : editId ? 'Salvar Usuário' : 'Cadastrar Usuário'}
           </button>
@@ -166,7 +166,7 @@ export function UsuariosAdminPage() {
         <h3 className="text-2xl font-semibold text-slate-800">Usuários</h3>
         <button
           onClick={() => setViewState('form')}
-          className="rounded bg-[#b78b03] px-5 py-2 text-sm font-medium text-white shadow"
+          className="rounded bg-emerald-500 px-5 py-2 text-sm font-medium text-white shadow"
         >
           + Novo Usuário
         </button>

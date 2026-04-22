@@ -95,7 +95,7 @@ export function FornecedoresPage() {
       const response = await api.get('/fornecedores/categorias');
       setCategories(response.data);
     } catch {
-      setError('Nao foi possivel carregar as categorias de fornecedores.');
+      setError('Não foi possível carregar as categorias de fornecedores.');
     } finally {
       setLoading(false);
     }
@@ -144,13 +144,13 @@ export function FornecedoresPage() {
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm('Deseja inativar esta categoria?')) return;
+    if (!confirm('Deseja inativar esta categoria? Esta ação pode ser revertida.')) return;
 
     try {
       await api.delete(`/fornecedores/categorias/${id}`);
       await fetchCategories();
     } catch {
-      setError('Nao foi possivel inativar a categoria.');
+      setError('Não foi possível inativar a categoria.');
     }
   };
 
@@ -174,7 +174,7 @@ export function FornecedoresPage() {
       await fetchCategories();
       closeModal();
     } catch {
-      setError('Nao foi possivel salvar a categoria.');
+      setError('Não foi possível salvar a categoria.');
     } finally {
       setSaving(false);
     }
@@ -196,7 +196,7 @@ export function FornecedoresPage() {
             </div>
             <h2 className="mt-4 text-2xl font-semibold text-slate-800">Acompanhe e organize os fornecedores por categoria</h2>
             <p className="mt-3 max-w-2xl text-sm leading-6 text-[#71695a]">
-              Mantenha a rede de parceiros bem estruturada, com acesso rapido as categorias e aos fornecedores cadastrados.
+              Mantenha a rede de parceiros bem estruturada, com acesso rápido às categorias e aos fornecedores cadastrados.
             </p>
           </div>
 
@@ -224,7 +224,7 @@ export function FornecedoresPage() {
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div>
               <h2 className="text-xl font-semibold text-slate-800">Categorias de fornecedores</h2>
-              <p className="mt-1 text-sm text-[#776f61]">Abra a categoria, cadastre novas opcoes ou ajuste as categorias ja existentes.</p>
+              <p className="mt-1 text-sm text-[#776f61]">Abra a categoria, cadastre novas opções ou ajuste as categorias já existentes.</p>
             </div>
 
             <div className="flex w-full flex-col gap-3 sm:flex-row sm:items-center lg:w-auto">

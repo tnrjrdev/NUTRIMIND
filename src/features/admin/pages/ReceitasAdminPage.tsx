@@ -175,10 +175,10 @@ export function ReceitasAdminPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t">
             {/* Ingredientes */}
-            <div className="border rounded-lg p-4 bg-amber-50/50">
-              <h4 className="font-semibold text-amber-900 mb-3 flex justify-between items-center">
+            <div className="border rounded-lg p-4 bg-emerald-50/50">
+              <h4 className="font-semibold text-emerald-800 mb-3 flex justify-between items-center">
                 Ingredientes
-                <button type="button" onClick={() => setIngredientes([...ingredientes, { descricao: '' }])} className="text-xs bg-amber-200 text-amber-800 px-2 py-1 rounded">+ Adicionar</button>
+                <button type="button" onClick={() => setIngredientes([...ingredientes, { descricao: '' }])} className="text-xs bg-emerald-200 text-emerald-700 px-2 py-1 rounded">+ Adicionar</button>
               </h4>
               <div className="space-y-2">
                 {ingredientes.map((ing, i) => (
@@ -211,7 +211,7 @@ export function ReceitasAdminPage() {
           </div>
 
           <div className="pt-4 border-t">
-            <button disabled={loading} type="submit" className="w-full bg-[#b78b03] text-white font-semibold py-3 rounded-lg shadow-md hover:bg-[#a17802] disabled:opacity-50 transition-colors">
+            <button disabled={loading} type="submit" className="w-full bg-emerald-500 text-white font-semibold py-3 rounded-lg shadow-md hover:bg-emerald-600 disabled:opacity-50 transition-colors">
               {loading ? 'Salvando...' : 'Salvar Receita'}
             </button>
           </div>
@@ -225,7 +225,7 @@ export function ReceitasAdminPage() {
     <div className="space-y-6">
       <div className="flex justify-between items-center mb-6">
         <h3 className="text-2xl font-semibold text-gray-800">Gerenciar Receitas</h3>
-        <button onClick={() => setViewState('form')} className="bg-[#b78b03] text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-[#a17802] shadow">
+        <button onClick={() => setViewState('form')} className="bg-emerald-500 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-emerald-600 shadow">
           + Nova Receita
         </button>
       </div>
@@ -248,7 +248,7 @@ export function ReceitasAdminPage() {
                 <tr key={rec.id} className="hover:bg-slate-50/50">
                   <td className="px-6 py-4 font-medium text-slate-800">{rec.nome}</td>
                   <td className="px-6 py-4">
-                    <span className="inline-block px-2 py-1 bg-amber-50 text-amber-700 rounded text-xs border border-amber-100">
+                    <span className="inline-block px-2 py-1 bg-emerald-50 text-emerald-700 rounded text-xs border border-emerald-100">
                       {rec.categoria?.nome || 'Sem categoria'}
                     </span>
                   </td>

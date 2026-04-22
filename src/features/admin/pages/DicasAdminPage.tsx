@@ -69,7 +69,7 @@ export function DicasAdminPage() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <textarea required value={formData.texto} onChange={(e) => setFormData({ ...formData, texto: e.target.value })} rows={5} placeholder="Texto da dica" className="w-full rounded border p-2" />
           <input value={formData.icone} onChange={(e) => setFormData({ ...formData, icone: e.target.value })} placeholder="Ícone" className="w-full rounded border p-2" />
-          <button type="submit" className="w-full rounded bg-[#b78b03] py-3 text-white">{editId ? 'Salvar dica' : 'Criar dica'}</button>
+          <button type="submit" className="w-full rounded bg-emerald-500 py-3 text-white">{editId ? 'Salvar dica' : 'Criar dica'}</button>
         </form>
       </div>
     );
@@ -79,7 +79,7 @@ export function DicasAdminPage() {
     <div>
       <div className="mb-6 flex items-center justify-between">
         <h3 className="text-2xl font-semibold">Dicas</h3>
-        <button onClick={() => setViewState('form')} className="rounded bg-[#b78b03] px-4 py-2 text-sm text-white">+ Nova dica</button>
+        <button onClick={() => setViewState('form')} className="rounded bg-emerald-500 px-4 py-2 text-sm text-white">+ Nova dica</button>
       </div>
       <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
         <table className="w-full text-left text-sm">

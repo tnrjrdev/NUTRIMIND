@@ -159,7 +159,7 @@ export function FornecedoresAdminPage() {
             </div>
           </div>
 
-          <button type="submit" className="w-full rounded bg-[#b78b03] py-3 text-white">{editId ? 'Salvar fornecedor' : 'Criar fornecedor'}</button>
+          <button type="submit" className="w-full rounded bg-emerald-500 py-3 text-white">{editId ? 'Salvar fornecedor' : 'Criar fornecedor'}</button>
         </form>
       </div>
     );
@@ -169,7 +169,7 @@ export function FornecedoresAdminPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h3 className="text-2xl font-semibold">Fornecedores</h3>
-        <button onClick={() => setViewState('form')} className="rounded bg-[#b78b03] px-4 py-2 text-sm text-white">+ Novo fornecedor</button>
+        <button onClick={() => setViewState('form')} className="rounded bg-emerald-500 px-4 py-2 text-sm text-white">+ Novo fornecedor</button>
       </div>
       <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
         <table className="w-full text-left text-sm">

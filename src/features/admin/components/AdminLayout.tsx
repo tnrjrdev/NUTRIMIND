@@ -35,7 +35,7 @@ export function AdminLayout() {
               to={link.to}
               className={({ isActive }) =>
                 `block px-4 py-2 rounded-lg text-sm transition-colors ${
-                  isActive ? 'bg-[#b78b03] text-white font-medium shadow-md shadow-amber-900/20' : 'text-slate-300 hover:bg-slate-800'
+                  isActive ? 'bg-emerald-500 text-white font-medium shadow-md shadow-emerald-900/20' : 'text-slate-300 hover:bg-slate-800'
                 }`
               }
             >
@@ -59,7 +59,7 @@ export function AdminLayout() {
           <a href="/" target="_blank" rel="noreferrer" className="text-sm font-medium text-emerald-500 hover:underline">Ver Site (Nova Aba)</a>
         </header>
 
-        <div className="flex-1 overflow-auto p-8 bg-[#f8f5ef]/50">
+        <div className="flex-1 overflow-auto p-8 bg-slate-50">
           <Outlet />
         </div>
       </main>

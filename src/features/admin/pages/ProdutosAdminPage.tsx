@@ -105,7 +105,7 @@ export function ProdutosAdminPage() {
             <input type="checkbox" checked={formData.recomendado} onChange={(e) => setFormData({ ...formData, recomendado: e.target.checked })} />
             Produto recomendado
           </label>
-          <button type="submit" className="w-full rounded bg-[#b78b03] py-3 text-white">{editId ? 'Salvar produto' : 'Criar produto'}</button>
+          <button type="submit" className="w-full rounded bg-emerald-500 py-3 text-white">{editId ? 'Salvar produto' : 'Criar produto'}</button>
         </form>
       </div>
     );
@@ -115,7 +115,7 @@ export function ProdutosAdminPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h3 className="text-2xl font-semibold">Produtos</h3>
-        <button onClick={() => setViewState('form')} className="rounded bg-[#b78b03] px-4 py-2 text-sm text-white">+ Novo produto</button>
+        <button onClick={() => setViewState('form')} className="rounded bg-emerald-500 px-4 py-2 text-sm text-white">+ Novo produto</button>
       </div>
       <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
         <table className="w-full text-left text-sm">

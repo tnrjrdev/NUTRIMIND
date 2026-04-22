@@ -92,7 +92,7 @@ export function BemEstarAdminPage() {
             <input value={formData.site} onChange={(e) => setFormData({ ...formData, site: e.target.value })} placeholder="Site" className="rounded border p-2" />
             <input value={formData.midiaUrl} onChange={(e) => setFormData({ ...formData, midiaUrl: e.target.value })} placeholder="URL de mídia" className="rounded border p-2" />
           </div>
-          <button type="submit" className="w-full rounded bg-[#b78b03] py-3 text-white">{editId ? 'Salvar indicação' : 'Criar indicação'}</button>
+          <button type="submit" className="w-full rounded bg-emerald-500 py-3 text-white">{editId ? 'Salvar indicação' : 'Criar indicação'}</button>
         </form>
       </div>
     );
@@ -102,7 +102,7 @@ export function BemEstarAdminPage() {
     <div>
       <div className="mb-6 flex items-center justify-between">
         <h3 className="text-2xl font-semibold">Bem-Estar</h3>
-        <button onClick={() => setViewState('form')} className="rounded bg-[#b78b03] px-4 py-2 text-sm text-white">+ Nova indicação</button>
+        <button onClick={() => setViewState('form')} className="rounded bg-emerald-500 px-4 py-2 text-sm text-white">+ Nova indicação</button>
       </div>
       <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
         <table className="w-full text-left text-sm">

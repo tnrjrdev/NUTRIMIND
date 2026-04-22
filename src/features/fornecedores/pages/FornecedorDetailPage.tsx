@@ -74,7 +74,7 @@ export function FornecedorDetailPage() {
     if (!item) return [];
 
     return [
-      item.endereco ? { label: 'Endereco', value: item.endereco } : null,
+      item.endereco ? { label: 'Endereço', value: item.endereco } : null,
       item.telefone ? { label: 'Telefone', value: item.telefone } : null,
       item.whatsapp ? { label: 'WhatsApp', value: item.whatsapp } : null,
       item.instagram ? { label: 'Instagram', value: item.instagram } : null,
@@ -108,7 +108,7 @@ export function FornecedorDetailPage() {
             <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#9a790c]">Resumo do parceiro</p>
             <h2 className="mt-3 text-2xl font-semibold text-slate-800">{item.descricaoCurta || 'Fornecedor parceiro da base Nutrimind'}</h2>
             <p className="mt-3 text-sm leading-6 text-[#71695a]">
-              {item.descricaoDetalhada || 'Sem descricao detalhada cadastrada para este fornecedor.'}
+              {item.descricaoDetalhada || 'Sem descrição detalhada cadastrada para este fornecedor.'}
             </p>
           </div>
 
@@ -128,7 +128,7 @@ export function FornecedorDetailPage() {
             </div>
 
             <p className="mt-6 text-sm leading-6 text-[#786f60]">
-              Consulte os dados de contato, links e cupons ativos deste parceiro em um unico lugar.
+              Consulte os dados de contato, links e cupons ativos deste parceiro em um único lugar.
             </p>
           </div>
         </section>
@@ -141,7 +141,7 @@ export function FornecedorDetailPage() {
               </span>
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#9f7d11]">Contato</p>
-                <h3 className="mt-1 text-lg font-semibold text-slate-800">Informacoes principais</h3>
+                <h3 className="mt-1 text-lg font-semibold text-slate-800">Informações principais</h3>
               </div>
             </div>
 
@@ -169,7 +169,7 @@ export function FornecedorDetailPage() {
               </span>
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#9f7d11]">Cupons</p>
-                <h3 className="mt-1 text-lg font-semibold text-slate-800">Ofertas disponiveis</h3>
+                <h3 className="mt-1 text-lg font-semibold text-slate-800">Ofertas disponíveis</h3>
               </div>
             </div>
 
@@ -190,7 +190,7 @@ export function FornecedorDetailPage() {
                         </span>
                       )}
                     </div>
-                    <p className="mt-2 text-sm text-[#6b6355]">{cupom.descricao || 'Cupom ativo sem descricao complementar.'}</p>
+                    <p className="mt-2 text-sm text-[#6b6355]">{cupom.descricao || 'Cupom ativo sem descrição complementar.'}</p>
                   </div>
                 ))
               )}

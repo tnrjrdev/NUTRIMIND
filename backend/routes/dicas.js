@@ -32,11 +32,12 @@ router.get('/:id', async (req, res) => {
 });
 
 router.post('/', verifyToken, async (req, res) => {
-  const { texto, ordemExibicao, ativo } = req.body;
+  const { texto, icone, ordemExibicao, ativo } = req.body;
   try {
     const dica = await prisma.dica.create({
       data: {
         texto,
+        icone: icone ?? null,
         ordemExibicao: ordemExibicao ? parseInt(ordemExibicao) : 0,
         ativo: ativo ?? true
       }
@@ -48,12 +49,13 @@ router.post('/', verifyToken, async (req, res) => {
 });
 
 router.put('/:id', verifyToken, async (req, res) => {
-  const { texto, ordemExibicao, ativo } = req.body;
+  const { texto, icone, ordemExibicao, ativo } = req.body;
   try {
     const dica = await prisma.dica.update({
       where: { id: parseInt(req.params.id) },
       data: {
         texto,
+        icone: icone !== undefined ? icone : undefined,
         ordemExibicao: ordemExibicao ? parseInt(ordemExibicao) : undefined,
         ativo
       }

@@ -102,7 +102,7 @@ export function ChasAdminPage() {
           <textarea value={formData.posologia} onChange={(e) => setFormData({ ...formData, posologia: e.target.value })} placeholder="Posologia" rows={3} className="w-full rounded border p-2" />
           <textarea value={formData.contraindicacoes} onChange={(e) => setFormData({ ...formData, contraindicacoes: e.target.value })} placeholder="Contraindicações" rows={3} className="w-full rounded border p-2" />
           <textarea value={formData.observacoes} onChange={(e) => setFormData({ ...formData, observacoes: e.target.value })} placeholder="Observações" rows={3} className="w-full rounded border p-2" />
-          <button type="submit" className="w-full rounded bg-[#b78b03] py-3 text-white">{editId ? 'Salvar chá' : 'Criar chá'}</button>
+          <button type="submit" className="w-full rounded bg-emerald-500 py-3 text-white">{editId ? 'Salvar chá' : 'Criar chá'}</button>
         </form>
       </div>
     );
@@ -112,7 +112,7 @@ export function ChasAdminPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h3 className="text-2xl font-semibold">Chás</h3>
-        <button onClick={() => setViewState('form')} className="rounded bg-[#b78b03] px-4 py-2 text-sm text-white">+ Novo chá</button>
+        <button onClick={() => setViewState('form')} className="rounded bg-emerald-500 px-4 py-2 text-sm text-white">+ Novo chá</button>
       </div>
       <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
         <table className="w-full text-left text-sm">

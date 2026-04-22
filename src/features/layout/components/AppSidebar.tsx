@@ -100,7 +100,7 @@ export function AppSidebar() {
 
   const menuItems = useMemo(
     () => [
-      { id: 'home', label: 'Inicio', icon: 'heart', path: '/home' },
+      { id: 'home', label: 'Início', icon: 'heart', path: '/home' },
       ...menuShortcuts.map((item) => ({
         id: item.id,
         label: item.label,
@@ -158,28 +158,31 @@ export function AppSidebar() {
               key={item.id}
               type="button"
               onClick={() => navigate(item.path)}
-              className={`flex items-center gap-3 rounded-xl px-4 py-3 text-left transition ${
+              aria-current={isActive ? 'page' : undefined}
+              className={`flex items-center gap-3 rounded-xl px-4 py-3 text-left transition-all duration-150 ${
                 isActive
                   ? 'bg-emerald-500 text-yellow-300 shadow-md shadow-emerald-700/20'
                   : 'text-emerald-50 hover:bg-emerald-500/50 hover:text-white'
               }`}
             >
-              <span className={`grid h-8 w-8 place-items-center rounded-lg ${isActive ? 'bg-yellow-400/20' : 'bg-transparent'}`}>
+              <span className={`grid h-8 w-8 place-items-center rounded-lg transition-colors ${
+                isActive ? 'bg-yellow-400/20' : 'bg-transparent'
+              }`}>
                 <DashboardIcon icon={item.icon} className="h-5 w-5" />
               </span>
               <span className="text-sm font-medium">{item.label}</span>
+              {isActive && (
+                <span className="ml-auto h-1.5 w-1.5 rounded-full bg-yellow-300" aria-hidden="true" />
+              )}
             </button>
           );
         })}
       </nav>
 
       <div className="mt-6">
-        <div className="rounded-2xl border border-orange-400/30 bg-orange-500/20 px-4 py-4 text-orange-200">
-          <p className="text-xs uppercase tracking-[0.2em] opacity-90">Mensagens</p>
-          <div className="mt-2 flex items-end justify-between gap-3">
-            <p className="text-3xl font-semibold text-orange-300">22</p>
-            <p className="text-xs opacity-90">Atualizações</p>
-          </div>
+        <div className="rounded-2xl border border-emerald-500/30 bg-emerald-700/20 px-4 py-3 text-emerald-200">
+          <p className="text-[10px] uppercase tracking-[0.2em] opacity-80">Sistema</p>
+          <p className="mt-1 text-xs text-emerald-100 opacity-90">Todos os módulos estão disponíveis.</p>
         </div>
       </div>
     </aside>
