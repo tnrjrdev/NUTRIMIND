@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "server": "node backend/server.js",
+    "db:seed": "node prisma/seed.js",
     "db:migrate:sqlite-to-postgres": "node scripts/migrate-sqlite-to-postgres.mjs"
   },
   "dependencies": {

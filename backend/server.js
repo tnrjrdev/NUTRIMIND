@@ -15,7 +15,7 @@ import fornecedoresRouter from './routes/fornecedores.js';
 import ifoodRouter from './routes/ifood.js';
 import chasRouter from './routes/chas.js';
 import substituicoesRouter from './routes/substituicoes.js';
-import bemEstarRouter from './routes/bemEstar.js';
+import bemEstarRouter from './routes/bem-estar.js';
 import dicasRouter from './routes/dicas.js';
 import usuariosRouter from './routes/usuarios.js';
 
