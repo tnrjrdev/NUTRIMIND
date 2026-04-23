@@ -1,1 +1,58 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap');
+
 @import "tailwindcss";
+
+@theme {
+  --font-sans: 'Outfit', system-ui, sans-serif;
+  --font-serif: 'Playfair Display', Georgia, serif;
+
+  /* Premium Wellness Palette (Overriding default Emerald) */
+  --color-emerald-50: #f4f7f4;
+  --color-emerald-100: #e3ebe3;
+  --color-emerald-200: #c6d6c7;
+  --color-emerald-300: #9cb99f;
+  --color-emerald-400: #6f9575;
+  --color-emerald-500: #4d7553;
+  --color-emerald-600: #3c5b41;
+  --color-emerald-700: #324936;
+  --color-emerald-800: #293b2d;
+  --color-emerald-900: #223126;
+  --color-emerald-950: #111a14;
+
+  /* Premium Accent (Overriding default Yellow with Champagne/Gold) */
+  --color-yellow-50: #fdfaf6;
+  --color-yellow-100: #fbf3e8;
+  --color-yellow-200: #f5e2cc;
+  --color-yellow-300: #e0b481;
+  --color-yellow-400: #dfa877;
+  --color-yellow-500: #d38b51;
+  --color-yellow-600: #c5713e;
+  --color-yellow-700: #a55a35;
+  --color-yellow-800: #864930;
+  --color-yellow-900: #6c3d2a;
+  --color-yellow-950: #3a1e14;
+}
+
+@layer base {
+  body {
+    @apply bg-slate-50 text-slate-900 antialiased;
+  }
+
+  /* Premium Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-slate-300 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-slate-400;
+  }
+}

@@ -7,11 +7,13 @@ type AppShellProps = {
 
 export function AppShell({ children }: AppShellProps) {
   return (
-    <main className="min-h-screen bg-slate-50 p-2 sm:p-4 lg:p-5">
-      <div className="mx-auto flex min-h-[calc(100vh-16px)] w-full max-w-[1600px] flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl shadow-emerald-900/5 lg:flex-row">
+    <main className="min-h-screen bg-slate-50 flex">
+      <div className="flex min-h-screen w-full flex-col lg:flex-row overflow-hidden bg-slate-50">
         <AppSidebar />
-        <section className="flex flex-1 flex-col bg-white px-4 py-5 sm:px-6 sm:py-6 lg:px-8">
-          {children}
+        <section className="flex flex-1 flex-col bg-white px-4 py-5 sm:px-6 sm:py-8 lg:px-10 shadow-[-10px_0_30px_-15px_rgba(0,0,0,0.1)] z-10 lg:rounded-l-[2rem] border-l border-slate-200 overflow-y-auto">
+          <div className="mx-auto w-full max-w-[1400px]">
+            {children}
+          </div>
         </section>
       </div>
     </main>

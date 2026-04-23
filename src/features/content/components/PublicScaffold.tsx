@@ -26,18 +26,16 @@ export function PublicScaffold({
     <AppShell>
       <div className="flex min-h-full flex-1 flex-col">
         {/* Page header */}
-        <header className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-400 px-6 py-8 text-white sm:px-10 shadow-lg shadow-emerald-500/20">
-          <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-yellow-300/20 blur-3xl" />
-          <div className="absolute -left-20 -bottom-20 h-64 w-64 rounded-full bg-blue-300/20 blur-3xl" />
-          <div className="relative z-10 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+        <header className="relative overflow-hidden rounded-2xl bg-white border-t-4 border-t-emerald-500 px-6 py-6 sm:px-8 shadow-sm ring-1 ring-slate-200">
+          <div className="relative z-10 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <p className="text-xs uppercase tracking-[0.24em] text-yellow-200 drop-shadow-sm">{eyebrow}</p>
-              <h1 className="mt-2 text-3xl font-semibold tracking-tight text-white sm:text-4xl drop-shadow-sm">{title}</h1>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-600">{eyebrow}</p>
+              <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">{title}</h1>
               {subtitle && (
-                <p className="mt-3 max-w-2xl text-sm leading-relaxed text-emerald-50 sm:text-base">{subtitle}</p>
+                <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate-500 sm:text-base">{subtitle}</p>
               )}
             </div>
-            <span className="self-start rounded-xl border border-white/20 bg-white/10 px-5 py-3 text-sm font-medium text-white backdrop-blur-md shadow-sm lg:self-auto">
+            <span className="self-start rounded-full border border-emerald-100 bg-emerald-50 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-emerald-700 shadow-sm lg:self-auto">
               Módulo ativo
             </span>
           </div>
@@ -74,7 +72,7 @@ export function PublicScaffold({
                 <button
                   type="button"
                   aria-label="Voltar para a página anterior"
-                  onClick={() => navigate(typeof backTo === 'number' ? backTo : backTo)}
+                  onClick={() => typeof backTo === 'number' ? navigate(backTo) : navigate(backTo)}
                   className="inline-flex h-10 items-center gap-1.5 rounded-full border border-slate-200 bg-white px-4 text-sm font-medium text-slate-600 shadow-sm transition hover:border-emerald-200 hover:bg-emerald-50 hover:text-emerald-700"
                 >
                   <span className="text-xl leading-none">‹</span>
