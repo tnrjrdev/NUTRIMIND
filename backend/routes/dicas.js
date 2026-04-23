@@ -5,7 +5,7 @@ import { verifyToken } from '../auth.js';
 const router = express.Router();
 router.use(verifyToken);
 
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
   try {
     const dicas = await prisma.dica.findMany({
       where: { ativo: true },
@@ -17,7 +17,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', async (req, res, next) => {
   try {
     const dica = await prisma.dica.findUnique({
       where: { id: parseInt(req.params.id) }
@@ -31,7 +31,7 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-router.post('/', verifyToken, async (req, res) => {
+router.post('/', verifyToken, async (req, res, next) => {
   const { texto, icone, ordemExibicao, ativo } = req.body;
   try {
     const dica = await prisma.dica.create({
@@ -48,7 +48,7 @@ router.post('/', verifyToken, async (req, res) => {
   }
 });
 
-router.put('/:id', verifyToken, async (req, res) => {
+router.put('/:id', verifyToken, async (req, res, next) => {
   const { texto, icone, ordemExibicao, ativo } = req.body;
   try {
     const dica = await prisma.dica.update({
@@ -66,7 +66,7 @@ router.put('/:id', verifyToken, async (req, res) => {
   }
 });
 
-router.delete('/:id', verifyToken, async (req, res) => {
+router.delete('/:id', verifyToken, async (req, res, next) => {
   try {
     const dica = await prisma.dica.update({
       where: { id: parseInt(req.params.id) },

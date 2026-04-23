@@ -27,7 +27,7 @@ async function createUser({ nome, email, senha, ativo = true }) {
   });
 }
 
-router.post('/registro', async (req, res) => {
+router.post('/registro', async (req, res, next) => {
   const { nome, email, senha } = req.body;
 
   if (!nome || !email || !senha) {
@@ -44,7 +44,7 @@ router.post('/registro', async (req, res) => {
   }
 });
 
-router.get('/', verifyToken, async (req, res) => {
+router.get('/', verifyToken, async (req, res, next) => {
   try {
     const rows = await prisma.usuario.findMany({
       orderBy: { createdAt: 'desc' },
@@ -55,7 +55,7 @@ router.get('/', verifyToken, async (req, res) => {
   }
 });
 
-router.get('/:id', verifyToken, async (req, res) => {
+router.get('/:id', verifyToken, async (req, res, next) => {
   try {
     const usuario = await prisma.usuario.findUnique({
       where: { id: Number(req.params.id) },
@@ -71,7 +71,7 @@ router.get('/:id', verifyToken, async (req, res) => {
   }
 });
 
-router.post('/', verifyToken, async (req, res) => {
+router.post('/', verifyToken, async (req, res, next) => {
   const { nome, email, senha, ativo } = req.body;
 
   if (!nome || !email || !senha) {
@@ -86,7 +86,7 @@ router.post('/', verifyToken, async (req, res) => {
   }
 });
 
-router.put('/:id', verifyToken, async (req, res) => {
+router.put('/:id', verifyToken, async (req, res, next) => {
   const userId = Number(req.params.id);
   const { nome, email, senha, ativo } = req.body;
 
@@ -125,7 +125,7 @@ router.put('/:id', verifyToken, async (req, res) => {
   }
 });
 
-router.delete('/:id', verifyToken, async (req, res) => {
+router.delete('/:id', verifyToken, async (req, res, next) => {
   try {
     const usuario = await prisma.usuario.update({
       where: { id: Number(req.params.id) },

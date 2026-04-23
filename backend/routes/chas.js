@@ -5,7 +5,7 @@ import { verifyToken } from '../auth.js';
 const router = express.Router();
 router.use(verifyToken);
 
-router.get('/categorias', async (req, res) => {
+router.get('/categorias', async (req, res, next) => {
   try {
     const categorias = await prisma.categoriaCha.findMany({
       where: { ativo: true },
@@ -17,7 +17,7 @@ router.get('/categorias', async (req, res) => {
   }
 });
 
-router.post('/categorias', verifyToken, async (req, res) => {
+router.post('/categorias', verifyToken, async (req, res, next) => {
   try {
     const { nome, descricao, imagem, ordemExibicao, ativo } = req.body;
     const categoria = await prisma.categoriaCha.create({
@@ -35,7 +35,7 @@ router.post('/categorias', verifyToken, async (req, res) => {
   }
 });
 
-router.put('/categorias/:id', verifyToken, async (req, res) => {
+router.put('/categorias/:id', verifyToken, async (req, res, next) => {
   try {
     const { nome, descricao, imagem, ordemExibicao, ativo } = req.body;
     const categoria = await prisma.categoriaCha.update({
@@ -54,7 +54,7 @@ router.put('/categorias/:id', verifyToken, async (req, res) => {
   }
 });
 
-router.delete('/categorias/:id', verifyToken, async (req, res) => {
+router.delete('/categorias/:id', verifyToken, async (req, res, next) => {
   try {
     const categoria = await prisma.categoriaCha.update({
       where: { id: parseInt(req.params.id) },
@@ -66,7 +66,7 @@ router.delete('/categorias/:id', verifyToken, async (req, res) => {
   }
 });
 
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
   try {
     const itens = await prisma.cha.findMany({
       where: {
@@ -82,7 +82,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', async (req, res, next) => {
   try {
     const item = await prisma.cha.findUnique({
       where: { id: parseInt(req.params.id) },
@@ -97,7 +97,7 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-router.post('/', verifyToken, async (req, res) => {
+router.post('/', verifyToken, async (req, res, next) => {
   const {
     categoriaId,
     nome,
@@ -137,7 +137,7 @@ router.post('/', verifyToken, async (req, res) => {
   }
 });
 
-router.put('/:id', verifyToken, async (req, res) => {
+router.put('/:id', verifyToken, async (req, res, next) => {
   const {
     categoriaId,
     nome,
@@ -174,7 +174,7 @@ router.put('/:id', verifyToken, async (req, res) => {
   }
 });
 
-router.delete('/:id', verifyToken, async (req, res) => {
+router.delete('/:id', verifyToken, async (req, res, next) => {
   try {
     const item = await prisma.cha.update({
       where: { id: parseInt(req.params.id) },

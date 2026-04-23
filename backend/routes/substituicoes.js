@@ -5,7 +5,7 @@ import { verifyToken } from '../auth.js';
 const router = express.Router();
 router.use(verifyToken);
 
-router.get('/categorias', async (req, res) => {
+router.get('/categorias', async (req, res, next) => {
   try {
     const categorias = await prisma.categoriaSubstituicao.findMany({
       where: { ativo: true },
@@ -17,7 +17,7 @@ router.get('/categorias', async (req, res) => {
   }
 });
 
-router.post('/categorias', verifyToken, async (req, res) => {
+router.post('/categorias', verifyToken, async (req, res, next) => {
   try {
     const { nome, descricao, ordemExibicao, ativo } = req.body;
     const categoria = await prisma.categoriaSubstituicao.create({
@@ -34,7 +34,7 @@ router.post('/categorias', verifyToken, async (req, res) => {
   }
 });
 
-router.put('/categorias/:id', verifyToken, async (req, res) => {
+router.put('/categorias/:id', verifyToken, async (req, res, next) => {
   try {
     const { nome, descricao, ordemExibicao, ativo } = req.body;
     const categoria = await prisma.categoriaSubstituicao.update({
@@ -52,7 +52,7 @@ router.put('/categorias/:id', verifyToken, async (req, res) => {
   }
 });
 
-router.delete('/categorias/:id', verifyToken, async (req, res) => {
+router.delete('/categorias/:id', verifyToken, async (req, res, next) => {
   try {
     const categoria = await prisma.categoriaSubstituicao.update({
       where: { id: parseInt(req.params.id) },
@@ -64,7 +64,7 @@ router.delete('/categorias/:id', verifyToken, async (req, res) => {
   }
 });
 
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
   try {
     const itens = await prisma.itemSubstituicao.findMany({
       where: {
@@ -80,7 +80,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', async (req, res, next) => {
   try {
     const item = await prisma.itemSubstituicao.findUnique({
       where: { id: parseInt(req.params.id) },
@@ -95,7 +95,7 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-router.post('/', verifyToken, async (req, res) => {
+router.post('/', verifyToken, async (req, res, next) => {
   const { categoriaId, nome, descricao, equivalencia, ordemExibicao, ativo } = req.body;
   if (!categoriaId) {
     return res.status(400).json({ message: 'Categoria é obrigatória.' });
@@ -119,7 +119,7 @@ router.post('/', verifyToken, async (req, res) => {
   }
 });
 
-router.put('/:id', verifyToken, async (req, res) => {
+router.put('/:id', verifyToken, async (req, res, next) => {
   const { categoriaId, nome, descricao, equivalencia, ordemExibicao, ativo } = req.body;
   try {
     const item = await prisma.itemSubstituicao.update({
@@ -140,7 +140,7 @@ router.put('/:id', verifyToken, async (req, res) => {
   }
 });
 
-router.delete('/:id', verifyToken, async (req, res) => {
+router.delete('/:id', verifyToken, async (req, res, next) => {
   try {
     const item = await prisma.itemSubstituicao.update({
       where: { id: parseInt(req.params.id) },

@@ -10,7 +10,7 @@ router.use(verifyToken);
 // ==========================================
 
 // PÚBLICA: Lista categorias ativas
-router.get('/categorias', async (req, res) => {
+router.get('/categorias', async (req, res, next) => {
   try {
     const categorias = await prisma.categoriaReceita.findMany({
       where: { ativo: true },
@@ -23,7 +23,7 @@ router.get('/categorias', async (req, res) => {
 });
 
 // ADMIN: Cria nova categoria
-router.post('/categorias', verifyToken, async (req, res) => {
+router.post('/categorias', verifyToken, async (req, res, next) => {
   try {
     const { nome, descricao, ordemExibicao, ativo } = req.body;
     const categoria = await prisma.categoriaReceita.create({
@@ -41,7 +41,7 @@ router.post('/categorias', verifyToken, async (req, res) => {
 });
 
 // ADMIN: Atualiza categoria
-router.put('/categorias/:id', verifyToken, async (req, res) => {
+router.put('/categorias/:id', verifyToken, async (req, res, next) => {
   try {
     const { nome, descricao, ordemExibicao, ativo } = req.body;
     const categoria = await prisma.categoriaReceita.update({
@@ -60,7 +60,7 @@ router.put('/categorias/:id', verifyToken, async (req, res) => {
 });
 
 // ADMIN: Inativa (Soft Delete) categoria
-router.delete('/categorias/:id', verifyToken, async (req, res) => {
+router.delete('/categorias/:id', verifyToken, async (req, res, next) => {
   try {
     const categoria = await prisma.categoriaReceita.update({
       where: { id: parseInt(req.params.id) },
@@ -78,7 +78,7 @@ router.delete('/categorias/:id', verifyToken, async (req, res) => {
 // ==========================================
 
 // PÚBLICA: Lista receitas ativas e seus dados filhos
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
   try {
     const receitas = await prisma.receita.findMany({
       where: {
@@ -99,7 +99,7 @@ router.get('/', async (req, res) => {
 });
 
 // PÚBLICA: Pega detalhes completos de uma receita
-router.get('/:id', async (req, res) => {
+router.get('/:id', async (req, res, next) => {
   try {
     const receita = await prisma.receita.findUnique({
       where: { id: parseInt(req.params.id) },
@@ -117,7 +117,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // ADMIN: Cria receita (junto com os filhos na mesma transação)
-router.post('/', verifyToken, async (req, res) => {
+router.post('/', verifyToken, async (req, res, next) => {
   const { nome, descricao, imagem, tempoPreparo, categoriaId, ingredientes, modosPreparo, ativo, destaque } = req.body;
   
   if (!categoriaId) return res.status(400).json({ message: 'Categoria é obrigatória.' });
@@ -155,7 +155,7 @@ router.post('/', verifyToken, async (req, res) => {
 });
 
 // ADMIN: Atualiza receita
-router.put('/:id', verifyToken, async (req, res) => {
+router.put('/:id', verifyToken, async (req, res, next) => {
   const recipeId = parseInt(req.params.id);
   const { nome, descricao, imagem, tempoPreparo, categoriaId, ingredientes, modosPreparo, ativo, destaque } = req.body;
 
@@ -198,7 +198,7 @@ router.put('/:id', verifyToken, async (req, res) => {
 });
 
 // ADMIN: Inativa receita
-router.delete('/:id', verifyToken, async (req, res) => {
+router.delete('/:id', verifyToken, async (req, res, next) => {
   try {
     const receita = await prisma.receita.update({
       where: { id: parseInt(req.params.id) },

@@ -3,6 +3,8 @@ import cors from 'cors';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import dotenv from 'dotenv';
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
 
 dotenv.config();
 
@@ -20,10 +22,51 @@ import dicasRouter from './routes/dicas.js';
 import usuariosRouter from './routes/usuarios.js';
 
 const app = express();
-const PORT = 3001;
+// Usa a porta do ambiente ou 3001 por padrão
+const PORT = process.env.PORT || 3001;
 
-app.use(cors());
-app.use(express.json());
+// ==========================================
+// MIDDLEWARES DE SEGURANÇA E ENGENHARIA
+// ==========================================
+
+// 1. Helmet: Adiciona headers HTTP de segurança (XSS, Clickjacking, etc)
+app.use(helmet());
+
+// 2. CORS Restrito: Permitir apenas origens confiáveis
+// Em dev, permitimos localhost:5173. Em prod, deve ser o domínio final.
+const allowedOrigins = ['http://localhost:5173', 'http://127.0.0.1:5173'];
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Bloqueado pelas políticas de CORS'));
+    }
+  },
+  credentials: true,
+}));
+
+app.use(express.json({ limit: '1mb' })); // Previne ataques de payload gigante
+
+// 3. Rate Limiting Geral: Protege contra DDoS e excesso de requisições
+const globalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutos
+  max: 1000, // Limite de 1000 requisições por IP a cada 15 min
+  message: { message: 'Muitas requisições deste IP. Tente novamente mais tarde.' }
+});
+app.use('/api', globalLimiter);
+
+// 4. Rate Limiting Específico para Login (Previne Força Bruta)
+const loginLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hora
+  max: 15, // Máximo de 15 tentativas de login por IP por hora
+  message: { message: 'Muitas tentativas de login. Conta temporariamente bloqueada por segurança.' }
+});
+
+
+// ==========================================
+// ROTAS DO SISTEMA
+// ==========================================
 
 app.use('/api/receitas', receitasRouter);
 app.use('/api/produtos', produtosRouter);
@@ -35,7 +78,8 @@ app.use('/api/bem-estar', bemEstarRouter);
 app.use('/api/dicas', dicasRouter);
 app.use('/api/usuarios', usuariosRouter);
 
-app.post('/api/login', async (req, res) => {
+// ROTA DE LOGIN (COM RATE LIMIT APLICADO)
+app.post('/api/login', loginLimiter, async (req, res, next) => {
   const { username, password } = req.body;
 
   try {
@@ -44,12 +88,12 @@ app.post('/api/login', async (req, res) => {
     });
 
     if (!user || !user.ativo) {
-      return res.status(401).json({ message: 'Usuario nao encontrado' });
+      return res.status(401).json({ message: 'Credenciais inválidas' }); // Mensagem genérica por segurança
     }
 
     const passwordIsValid = bcrypt.compareSync(password, user.senhaHash);
     if (!passwordIsValid) {
-      return res.status(401).json({ message: 'Senha invalida' });
+      return res.status(401).json({ message: 'Credenciais inválidas' }); // Mensagem genérica por segurança
     }
 
     const token = jwt.sign({ id: user.id, email: user.email }, SECRET_KEY, { expiresIn: 86400 });
@@ -60,35 +104,50 @@ app.post('/api/login', async (req, res) => {
       user: mapUser(user),
     });
   } catch (error) {
-    return res.status(500).json({ message: 'Erro ao autenticar usuario', error: error.message });
+    next(error); // Passa pro Error Handler Global (previne vazamento)
   }
 });
 
-app.get('/api/admin/me', verifyToken, async (req, res) => {
+app.get('/api/admin/me', verifyToken, async (req, res, next) => {
   try {
     const user = await prisma.usuario.findUnique({
       where: { id: req.userId },
     });
 
     if (!user || !user.ativo) {
-      return res.status(404).json({ auth: false, message: 'Usuario nao encontrado.' });
+      return res.status(404).json({ auth: false, message: 'Usuário não encontrado ou inativo.' });
     }
 
     return res.status(200).json({ auth: true, user: mapUser(user) });
   } catch (error) {
-    return res.status(500).json({ auth: false, message: 'Erro ao carregar usuario.', error: error.message });
+    next(error);
   }
 });
+
+
+// ==========================================
+// MIDDLEWARE GLOBAL DE TRATAMENTO DE ERROS (Prevenção de Vazamento)
+// ==========================================
+app.use((err, req, res, next) => {
+  // 1. Log interno para desenvolvedores (não vai pro usuário)
+  console.error(`[CRITICAL ERROR] ${req.method} ${req.url}:`, err);
+
+  // 2. Resposta sanitizada para o cliente (esconde detalhes do banco de dados/stack trace)
+  res.status(500).json({ 
+    message: 'Erro interno no servidor. Nossa equipe técnica já foi notificada.' 
+  });
+});
+
 
 async function startServer() {
   try {
     await ensureAdminUser();
 
     app.listen(PORT, () => {
-      console.log(`Servidor rodando na porta ${PORT}`);
+      console.log(`[Segurança Ativa] Servidor blindado rodando na porta ${PORT}`);
     });
   } catch (error) {
-    console.error('Falha ao iniciar o servidor:', error);
+    console.error('Falha crítica ao iniciar o servidor:', error);
     process.exit(1);
   }
 }
