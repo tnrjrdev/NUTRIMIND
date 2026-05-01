@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../../../../services/api';
-import { menuShortcuts } from '../data/home.mock';
+import { menuShortcuts } from '../data/home.constants';
 import { AppFooter } from '../../../layout/components/AppFooter';
 import { AppShell } from '../../../layout/components/AppShell';
 

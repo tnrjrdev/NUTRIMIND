@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { clearAuthSession, getStoredUser } from '../../auth/utils/session';
-import { menuShortcuts, userProfile } from '../../feature/home/data/home.mock';
+import { menuShortcuts } from '../../feature/home/data/home.constants';
 
 function getGreeting() {
   const hour = new Date().getHours();
@@ -95,7 +95,7 @@ export function AppSidebar() {
   const navigate = useNavigate();
   const location = useLocation();
   const storedUser = getStoredUser();
-  const currentUserName = storedUser?.nome || userProfile.name;
+  const currentUserName = storedUser?.nome || 'Usuário';
   const currentUserEmail = storedUser?.email || 'usuario@nutrimind.com';
 
   const menuItems = useMemo(
