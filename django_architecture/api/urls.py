@@ -2,7 +2,7 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import *
 
-router = DefaultRouter()
+router = DefaultRouter(trailing_slash=False)
 router.register(r'usuarios', UsuarioViewSet, basename='usuario')
 router.register(r'receitas/categorias', CategoriaReceitaViewSet, basename='categoriareceita')
 router.register(r'receitas', ReceitaViewSet, basename='receita')
@@ -25,7 +25,9 @@ router.register(r'dicas', DicaViewSet, basename='dica')
 urlpatterns = [
     # Rotas de Autenticação Customizadas
     path('login', login_view, name='api-login'),
-    path('admin/me', me_view, name='api-me'),
+    path('me', me_view, name='api-me'),
+    path('schema', db_schema_view, name='api-schema'),
+    path('usuarios/registro', registro_view, name='api-registro'),
     
     # Rotas do CRUD (ViewSets)
     path('', include(router.urls)),

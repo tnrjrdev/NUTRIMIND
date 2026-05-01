@@ -9,6 +9,10 @@ class Usuario(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    @property
+    def is_authenticated(self):
+        return True
+
     class Meta:
         managed = False
         db_table = 'usuarios'
@@ -33,7 +37,6 @@ class Receita(models.Model):
     descricao = models.TextField(null=True, blank=True)
     imagem = models.TextField(null=True, blank=True)
     tempoPreparo = models.CharField(max_length=255, null=True, blank=True)
-    destaque = models.BooleanField(default=False)
     ativo = models.BooleanField(default=True)
     createdAt = models.DateTimeField(auto_now_add=True)
     updatedAt = models.DateTimeField(auto_now=True)
@@ -202,8 +205,6 @@ class Cha(models.Model):
     posologia = models.TextField(null=True, blank=True)
     contraindicacoes = models.TextField(null=True, blank=True)
     observacoes = models.TextField(null=True, blank=True)
-    usoAdulto = models.BooleanField(default=False)
-    usoInfantil = models.BooleanField(default=False)
     ordemExibicao = models.IntegerField(default=0)
     ativo = models.BooleanField(default=True)
     createdAt = models.DateTimeField(auto_now_add=True)
@@ -246,8 +247,6 @@ class BemEstarItem(models.Model):
     nome = models.CharField(max_length=255)
     descricaoCurta = models.TextField(null=True, blank=True)
     descricaoDetalhada = models.TextField(null=True, blank=True)
-    telefone = models.CharField(max_length=255, null=True, blank=True)
-    whatsapp = models.BooleanField(default=False)
     instagram = models.CharField(max_length=255, null=True, blank=True)
     site = models.CharField(max_length=255, null=True, blank=True)
     midiaUrl = models.TextField(null=True, blank=True)
