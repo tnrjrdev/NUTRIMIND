@@ -160,10 +160,10 @@ export function HomePage() {
   }, []);
 
   const statCards = [
-    { label: 'Receitas', singular: 'receita', value: stats.receitas, helper: 'Biblioteca nutricional', icon: 'book', path: '/admin/receitas' },
-    { label: 'Produtos', singular: 'produto', value: stats.produtos, helper: 'Sugestões ativas', icon: 'basket', path: '/admin/produtos' },
-    { label: 'Fornecedores', singular: 'fornecedor', value: stats.fornecedores, helper: 'Parceiros cadastrados', icon: 'cart', path: '/admin/fornecedores' },
-    { label: 'Dicas', singular: 'dica', value: stats.dicas, helper: 'Conteúdos rápidos', icon: 'lamp', path: '/admin/dicas' },
+    { label: 'Receitas', singular: 'receita', value: stats.receitas, helper: 'Biblioteca nutricional', icon: 'book', path: '/receitas' },
+    { label: 'Produtos', singular: 'produto', value: stats.produtos, helper: 'Sugestões ativas', icon: 'basket', path: '/produtos' },
+    { label: 'Fornecedores', singular: 'fornecedor', value: stats.fornecedores, helper: 'Parceiros cadastrados', icon: 'cart', path: '/fornecedores' },
+    { label: 'Dicas', singular: 'dica', value: stats.dicas, helper: 'Conteúdos rápidos', icon: 'lamp', path: '/dicas' },
   ];
 
   const recentRecipes = recipes.slice(0, 4);

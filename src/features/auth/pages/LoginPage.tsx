@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { api } from '../../../services/api';
 import { setAuthSession } from '../utils/session';
 
 // ─── Sub-components ────────────────────────────────────────────────────────────
@@ -76,22 +76,15 @@ export function LoginPage() {
     setLoading(true);
 
     try {
-      const response = await axios.post('http://localhost:3001/api/login', {
+      const response = await api.post('/login', {
         username: email.trim().toLowerCase(),
-        password,
+        password: password,
       });
-      setAuthSession(response.data.token, response.data.user);
-      navigate('/home');
-    } catch (requestError: unknown) {
-      if (axios.isAxiosError(requestError)) {
-        const status = requestError.response?.status;
-        if (status === 401) {
-          setError('E-mail ou senha incorretos. Verifique e tente novamente.');
-        } else if (status === 403) {
-          setError('Sua conta está inativa. Entre em contato com o suporte.');
-        } else {
-          setError(requestError.response?.data?.message || 'Não foi possível entrar. Tente novamente.');
-        }
+      
+      const data = response.data;
+      if (data.auth && data.token) {
+        setAuthSession(data.token, data.user);
+        navigate('/home', { replace: true });
       } else {
         setError('Erro de conexão. Verifique sua internet e tente novamente.');
       }

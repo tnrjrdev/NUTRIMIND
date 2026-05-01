@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { api } from '../../../services/api';
 
 // ─── Validation helpers ────────────────────────────────────────────────────────
 
@@ -191,15 +191,15 @@ export function RegisterPage() {
 
     setLoading(true);
     try {
-      await axios.post('http://localhost:3001/api/usuarios/registro', {
+      await api.post('/usuarios/registro', {
         nome: nome.trim(),
         email: email.trim().toLowerCase(),
         senha: password,
       });
       setSuccess(true);
-    } catch (err: unknown) {
-      if (axios.isAxiosError(err)) {
-        setApiError(err.response?.data?.message || 'Não foi possível concluir o cadastro.');
+    } catch (err: any) {
+      if (err.response?.data?.message) {
+        setApiError(err.response.data.message);
       } else {
         setApiError('Não foi possível concluir o cadastro.');
       }

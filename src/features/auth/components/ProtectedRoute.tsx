@@ -18,7 +18,7 @@ export function ProtectedRoute() {
     let isMounted = true;
 
     api
-      .get('/admin/me')
+      .get('/me')
       .then((response) => {
         if (!isMounted) {
           return;

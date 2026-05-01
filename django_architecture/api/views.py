@@ -63,6 +63,54 @@ def me_view(request):
     except Usuario.DoesNotExist:
         return Response({'auth': False, 'message': 'Usuário não encontrado'}, status=status.HTTP_404_NOT_FOUND)
 
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def registro_view(request):
+    nome = request.data.get('nome')
+    email = request.data.get('email')
+    senha = request.data.get('senha')
+
+    if not nome or not email or not senha:
+        return Response({'message': 'Nome, email e senha são obrigatórios.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    if Usuario.objects.filter(email=email).exists():
+        return Response({'message': 'Já existe um usuário com este email.'}, status=status.HTTP_409_CONFLICT)
+
+    senha_hash = bcrypt.hashpw(senha.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+    
+    user = Usuario.objects.create(nome=nome, email=email, senha_hash=senha_hash, ativo=True)
+    
+    # Gerar token logo após o cadastro para auto-login se necessário
+    refresh = RefreshToken()
+    refresh['id'] = user.id
+    
+    return Response({
+        'auth': True,
+        'token': str(refresh.access_token),
+        'user': UsuarioSerializer(user).data
+    }, status=status.HTTP_201_CREATED)
+
+# ==========================================
+# DB SCHEMA INSPECTION (TEMP)
+# ==========================================
+from django.db import connection
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def db_schema_view(request):
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+        tables = cursor.fetchall()
+        
+        schema = {}
+        for table in tables:
+            tname = table[0]
+            cursor.execute(f"PRAGMA table_info('{tname}')")
+            cols = cursor.fetchall()
+            schema[tname] = [{"cid": c[0], "name": c[1], "type": c[2]} for c in cols]
+            
+    return Response(schema)
+
 # ==========================================
 # VIEWSETS (CRUD Automático para cada Modelo)
 # ==========================================

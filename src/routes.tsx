@@ -1,15 +1,5 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
-import { AdminLayout } from './features/admin/components/AdminLayout';
-import { AdminDashboardPage } from './features/admin/pages/AdminDashboardPage';
-import { BemEstarAdminPage } from './features/admin/pages/BemEstarAdminPage';
-import { ChasAdminPage } from './features/admin/pages/ChasAdminPage';
-import { DicasAdminPage } from './features/admin/pages/DicasAdminPage';
-import { FornecedoresAdminPage } from './features/admin/pages/FornecedoresAdminPage';
-import { IfoodAdminPage } from './features/admin/pages/IfoodAdminPage';
-import { ProdutosAdminPage } from './features/admin/pages/ProdutosAdminPage';
-import { ReceitasAdminPage } from './features/admin/pages/ReceitasAdminPage';
-import { SubstituicoesAdminPage } from './features/admin/pages/SubstituicoesAdminPage';
-import { UsuariosAdminPage } from './features/admin/pages/UsuariosAdminPage';
+
 import { ProtectedRoute } from './features/auth/components/ProtectedRoute';
 import { LoginPage } from './features/auth/pages/LoginPage';
 import { RegisterPage } from './features/auth/pages/RegisterPage';
@@ -45,21 +35,7 @@ export function AppRoutes() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/cadastro" element={<RegisterPage />} />
 
-        <Route path="/admin" element={<ProtectedRoute />}>
-          <Route element={<AdminLayout />}>
-            <Route index element={<Navigate to="/admin/dashboard" replace />} />
-            <Route path="dashboard" element={<AdminDashboardPage />} />
-            <Route path="usuarios" element={<UsuariosAdminPage />} />
-            <Route path="receitas" element={<ReceitasAdminPage />} />
-            <Route path="produtos" element={<ProdutosAdminPage />} />
-            <Route path="fornecedores" element={<FornecedoresAdminPage />} />
-            <Route path="ifood" element={<IfoodAdminPage />} />
-            <Route path="chas" element={<ChasAdminPage />} />
-            <Route path="substituicoes" element={<SubstituicoesAdminPage />} />
-            <Route path="bem-estar" element={<BemEstarAdminPage />} />
-            <Route path="dicas" element={<DicasAdminPage />} />
-          </Route>
-        </Route>
+
 
         <Route element={<ProtectedRoute />}>
           <Route path="/home" element={<HomePage />} />
