@@ -21,15 +21,40 @@ class ReceitaSerializer(serializers.ModelSerializer):
         model = Receita
         fields = '__all__'
 
-# Para manter o tamanho do arquivo inicial simples, estou criando serializers dinamicamente para os demais modelos
-# Em um cenário real, você pode querer personalizar cada um deles se houver necessidades específicas de aninhamento.
+# Serializers dinamicos para os demais models. Para cada FK, expoe automaticamente
+# o campo aninhado (read-only) e um <fk>Id (write-only) que o frontend usa.
 
-def create_model_serializer(model_class):
+def _make_basic_serializer(model_class):
     class Meta:
         model = model_class
         fields = '__all__'
-    
-    return type(f'{model_class.__name__}Serializer', (serializers.ModelSerializer,), {'Meta': Meta})
+
+    return type(
+        f'{model_class.__name__}BasicSerializer',
+        (serializers.ModelSerializer,),
+        {'Meta': Meta},
+    )
+
+
+def create_model_serializer(model_class):
+    extra_fields = {}
+    for field in model_class._meta.fields:
+        if not (field.is_relation and field.many_to_one):
+            continue
+        nested_serializer = _make_basic_serializer(field.related_model)
+        extra_fields[field.name] = nested_serializer(read_only=True)
+        extra_fields[f'{field.name}Id'] = serializers.PrimaryKeyRelatedField(
+            queryset=field.related_model.objects.all(),
+            source=field.name,
+            write_only=True,
+        )
+
+    class Meta:
+        model = model_class
+        fields = '__all__'
+
+    attrs = {'Meta': Meta, **extra_fields}
+    return type(f'{model_class.__name__}Serializer', (serializers.ModelSerializer,), attrs)
 
 IngredienteSerializer = create_model_serializer(Ingrediente)
 ModoPreparoSerializer = create_model_serializer(ModoPreparo)

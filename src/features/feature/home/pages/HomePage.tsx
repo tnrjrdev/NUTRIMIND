@@ -10,6 +10,9 @@ type DashboardStats = {
   produtos: number;
   fornecedores: number;
   dicas: number;
+  categoriasReceitas: number;
+  categoriasProdutos: number;
+  categoriasFornecedores: number;
 };
 
 type Receita = {
@@ -24,6 +27,9 @@ const defaultStats: DashboardStats = {
   produtos: 0,
   fornecedores: 0,
   dicas: 0,
+  categoriasReceitas: 0,
+  categoriasProdutos: 0,
+  categoriasFornecedores: 0,
 };
 
 function getGreeting() {
@@ -118,38 +124,54 @@ export function HomePage() {
   const [stats, setStats] = useState<DashboardStats>(defaultStats);
   const [loadingStats, setLoadingStats] = useState(true);
   const [recipes, setRecipes] = useState<Receita[]>([]);
-  const [showAllFeatured, setShowAllFeatured] = useState(false);
+  const [showRecent, setShowRecent] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
 
     async function loadStats() {
-      try {
-        const [receitas, produtos, fornecedores, dicas] = await Promise.all([
-          api.get('/receitas'),
-          api.get('/produtos'),
-          api.get('/fornecedores'),
-          api.get('/dicas'),
-        ]);
+      const results = await Promise.allSettled([
+        api.get('/receitas'),
+        api.get('/produtos'),
+        api.get('/fornecedores'),
+        api.get('/dicas'),
+        api.get('/receitas/categorias'),
+        api.get('/produtos/categorias'),
+        api.get('/fornecedores/categorias'),
+      ]);
 
-        if (!isMounted) return;
+      if (!isMounted) return;
 
-        const receitasData = Array.isArray(receitas.data) ? receitas.data : [];
+      const extractList = <T,>(result: PromiseSettledResult<{ data: unknown }>): T[] => {
+        if (result.status !== 'fulfilled') {
+          console.error('[home] falha ao carregar endpoint:', result.reason);
+          return [];
+        }
+        return Array.isArray(result.value.data) ? (result.value.data as T[]) : [];
+      };
 
-        setStats({
-          receitas: receitasData.length,
-          produtos: Array.isArray(produtos.data) ? produtos.data.length : 0,
-          fornecedores: Array.isArray(fornecedores.data) ? fornecedores.data.length : 0,
-          dicas: Array.isArray(dicas.data) ? dicas.data.length : 0,
-        });
-        setRecipes(receitasData);
-      } catch {
-        if (!isMounted) return;
-        setStats(defaultStats);
-        setRecipes([]);
-      } finally {
-        if (isMounted) setLoadingStats(false);
-      }
+      const [
+        receitasResult,
+        produtosResult,
+        fornecedoresResult,
+        dicasResult,
+        catReceitasResult,
+        catProdutosResult,
+        catFornecedoresResult,
+      ] = results;
+      const receitasData = extractList<Receita>(receitasResult);
+
+      setStats({
+        receitas: receitasData.length,
+        produtos: extractList(produtosResult).length,
+        fornecedores: extractList(fornecedoresResult).length,
+        dicas: extractList(dicasResult).length,
+        categoriasReceitas: extractList(catReceitasResult).length,
+        categoriasProdutos: extractList(catProdutosResult).length,
+        categoriasFornecedores: extractList(catFornecedoresResult).length,
+      });
+      setRecipes(receitasData);
+      setLoadingStats(false);
     }
 
     loadStats();
@@ -160,15 +182,15 @@ export function HomePage() {
   }, []);
 
   const statCards = [
-    { label: 'Receitas', singular: 'receita', value: stats.receitas, helper: 'Biblioteca nutricional', icon: 'book', path: '/receitas' },
-    { label: 'Produtos', singular: 'produto', value: stats.produtos, helper: 'Sugestões ativas', icon: 'basket', path: '/produtos' },
-    { label: 'Fornecedores', singular: 'fornecedor', value: stats.fornecedores, helper: 'Parceiros cadastrados', icon: 'cart', path: '/fornecedores' },
-    { label: 'Dicas', singular: 'dica', value: stats.dicas, helper: 'Conteúdos rápidos', icon: 'lamp', path: '/dicas' },
+    { label: 'Receitas', value: stats.receitas, helper: 'Biblioteca nutricional', icon: 'book', path: '/receitas', categorias: stats.categoriasReceitas },
+    { label: 'Produtos', value: stats.produtos, helper: 'Sugestões ativas', icon: 'basket', path: '/produtos', categorias: stats.categoriasProdutos },
+    { label: 'Fornecedores', value: stats.fornecedores, helper: 'Parceiros cadastrados', icon: 'cart', path: '/fornecedores', categorias: stats.categoriasFornecedores },
+    { label: 'Dicas', value: stats.dicas, helper: 'Conteúdos rápidos', icon: 'lamp', path: '/dicas', categorias: null as number | null },
   ];
 
   const recentRecipes = recipes.slice(0, 4);
   const featuredRecipes = recipes.filter((recipe) => recipe.destaque);
-  const recipesToShow = showAllFeatured ? featuredRecipes : recentRecipes;
+  const recipesToShow = showRecent ? recentRecipes : featuredRecipes;
 
   return (
     <AppShell>
@@ -201,52 +223,44 @@ export function HomePage() {
         </div>
 
         <div className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          {statCards.map((card) => {
-            const isEmpty = !loadingStats && card.value === 0;
-
-            return (
-              <article key={card.label} className={`group flex flex-col justify-between rounded-2xl border p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-emerald-500/10 ${isEmpty ? 'border-dashed border-slate-300 bg-slate-50' : 'border-slate-200 bg-white hover:border-emerald-300'}`}>
-                <div>
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <p className={`text-sm font-medium ${isEmpty ? 'text-slate-400' : 'text-slate-500'}`}>{card.label}</p>
-                      <p className={`mt-3 text-4xl font-semibold tracking-tight ${isEmpty ? 'text-slate-300' : 'text-slate-800'}`}>
-                        {loadingStats ? '--' : card.value}
-                      </p>
-                    </div>
-                    <span className={`grid h-12 w-12 place-items-center rounded-xl transition-colors ${isEmpty ? 'bg-slate-200/50 text-slate-400' : 'bg-orange-50 text-orange-500 group-hover:bg-orange-100'}`}>
-                      <DashboardIcon icon={card.icon} className="h-6 w-6" />
-                    </span>
+          {statCards.map((card) => (
+            <button
+              key={card.label}
+              type="button"
+              onClick={() => navigate(card.path)}
+              className="group flex flex-col justify-between rounded-2xl border border-slate-200 bg-white p-5 text-left transition-all duration-300 hover:-translate-y-1 hover:border-emerald-300 hover:shadow-xl hover:shadow-emerald-500/10"
+            >
+              <div>
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="text-sm font-medium text-slate-500">{card.label}</p>
+                    <p className="mt-3 text-4xl font-semibold tracking-tight text-slate-800">
+                      {loadingStats ? '--' : card.value}
+                    </p>
                   </div>
+                  <span className="grid h-12 w-12 place-items-center rounded-xl bg-orange-50 text-orange-500 transition-colors group-hover:bg-orange-100">
+                    <DashboardIcon icon={card.icon} className="h-6 w-6" />
+                  </span>
+                </div>
 
-                  {!isEmpty && !loadingStats && (
-                    <div className="mt-4 flex items-end justify-between">
+                {!loadingStats && (
+                  <div className="mt-4 space-y-1">
+                    <div className="flex items-end justify-between">
                       <p className="text-sm text-slate-400">{card.helper}</p>
-                      {/* Mini decorative trend line */}
                       <svg width="48" height="16" viewBox="0 0 48 16" fill="none" className="text-emerald-400 opacity-60">
                         <path d="M0 12C4.5 12 6.5 4 12 4C17.5 4 20 14 26 14C32 14 36 2 48 2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
                     </div>
-                  )}
-                </div>
-
-                {isEmpty && (
-                  <div className="mt-4 pt-4 border-t border-slate-200/60">
-                    <p className="text-[11px] leading-relaxed text-slate-500">
-                      Nenhuma {card.singular} cadastrada ainda — comece agora.
-                    </p>
-                    <button
-                      type="button"
-                      onClick={() => navigate(card.path)}
-                      className="mt-3 inline-flex w-full items-center justify-center rounded-lg bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-700 transition-colors hover:bg-emerald-100"
-                    >
-                      + Adicionar primeira {card.singular}
-                    </button>
+                    {card.categorias !== null && (
+                      <p className="text-xs text-slate-400">
+                        {card.categorias} {card.categorias === 1 ? 'categoria' : 'categorias'}
+                      </p>
+                    )}
                   </div>
                 )}
-              </article>
-            );
-          })}
+              </div>
+            </button>
+          ))}
         </div>
       </section>
 
@@ -282,26 +296,26 @@ export function HomePage() {
             <div>
               <h2 className="text-xl font-semibold text-slate-800">Receitas em destaque</h2>
               <p className="text-sm text-slate-500">
-                {showAllFeatured
-                  ? 'Todas as receitas marcadas como destaque.'
-                  : 'Receitas mais recentes para retomada rápida.'}
+                {showRecent
+                  ? 'Receitas mais recentes para retomada rápida.'
+                  : 'Receitas marcadas como destaque para acesso rápido.'}
               </p>
             </div>
             <button
               type="button"
-              onClick={() => setShowAllFeatured((current) => !current)}
+              onClick={() => setShowRecent((current) => !current)}
               className="text-sm font-semibold text-emerald-600 transition hover:text-emerald-700"
             >
-              {showAllFeatured ? 'Ver recentes' : 'Ver todas'}
+              {showRecent ? 'Ver destaques' : 'Ver recentes'}
             </button>
           </div>
 
           <div className="mt-6 space-y-3">
             {recipesToShow.length === 0 ? (
               <div className="rounded-xl border border-slate-100 bg-slate-50 px-4 py-6 text-center text-sm text-slate-500">
-                {showAllFeatured
-                  ? 'Nenhuma receita em destaque encontrada no momento.'
-                  : 'Nenhuma receita recente encontrada no momento.'}
+                {showRecent
+                  ? 'Nenhuma receita recente encontrada no momento.'
+                  : 'Nenhuma receita marcada como destaque — abra o módulo de receitas para destacar uma.'}
               </div>
             ) : (
               recipesToShow.map((recipe, index) => (
@@ -319,9 +333,9 @@ export function HomePage() {
                       {recipe.nome}
                     </p>
                     <p className="mt-1 truncate text-xs text-slate-500">
-                      {showAllFeatured
-                        ? 'Receita marcada como destaque para acesso rápido.'
-                        : 'Continue a navegação a partir das receitas mais recentes.'}
+                      {showRecent
+                        ? 'Continue a navegação a partir das receitas mais recentes.'
+                        : 'Receita marcada como destaque para acesso rápido.'}
                     </p>
                   </div>
                 </button>

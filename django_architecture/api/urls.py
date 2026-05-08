@@ -2,7 +2,16 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import *
 
-router = DefaultRouter(trailing_slash=False)
+
+class OptionalSlashRouter(DefaultRouter):
+    """Aceita URLs com e sem barra final (ex.: /receitas e /receitas/)."""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.trailing_slash = '/?'
+
+
+router = OptionalSlashRouter()
 router.register(r'usuarios', UsuarioViewSet, basename='usuario')
 router.register(r'receitas/categorias', CategoriaReceitaViewSet, basename='categoriareceita')
 router.register(r'receitas', ReceitaViewSet, basename='receita')
