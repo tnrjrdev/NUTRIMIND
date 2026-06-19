@@ -202,11 +202,12 @@ export function RecipeCategoryPage() {
     setSaving(true);
     setError('');
 
+    // Nao enviamos ingredientes/modosPreparo aqui: o backend so substitui esses filhos
+    // quando os campos estao presentes. Omitindo-os, a edicao a partir da pagina de
+    // categoria preserva os filhos ja cadastrados (eles sao gerenciados no detalhe da receita).
     const payload = {
       ...formData,
       categoriaId: numericCategoryId,
-      ingredientes: [],
-      modosPreparo: [],
     };
 
     try {

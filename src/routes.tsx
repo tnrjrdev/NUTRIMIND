@@ -26,6 +26,7 @@ import { ProductsPage } from './features/products/pages/ProductsPage';
 import { SubstituicaoCategoryPage } from './features/substituicoes/pages/SubstituicaoCategoryPage';
 import { SubstituicaoDetailPage } from './features/substituicoes/pages/SubstituicaoDetailPage';
 import { SubstituicoesPage } from './features/substituicoes/pages/SubstituicoesPage';
+import { RefeicoesPage } from './features/refeicoes/pages/RefeicoesPage';
 
 export function AppRoutes() {
   return (
@@ -57,6 +58,7 @@ export function AppRoutes() {
           <Route path="/substituicoes" element={<SubstituicoesPage />} />
           <Route path="/substituicoes/categoria/:categoriaId" element={<SubstituicaoCategoryPage />} />
           <Route path="/substituicoes/:id" element={<SubstituicaoDetailPage />} />
+          <Route path="/refeicoes" element={<RefeicoesPage />} />
           <Route path="/bem-estar" element={<BemEstarPage />} />
           <Route path="/bem-estar/:id" element={<BemEstarDetailPage />} />
           <Route path="/dicas" element={<DicasPage />} />

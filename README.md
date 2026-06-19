@@ -1,6 +1,8 @@
 # Nutrimind
 
-SaaS de gestão de pacientes, receitas, produtos, fornecedores e conteúdos para nutricionistas. Frontend em React + Vite e backend em Django REST Framework, com SQLite em desenvolvimento e PostgreSQL em produção.
+SaaS de gestão de pacientes, receitas, produtos, fornecedores e conteúdos para nutricionistas.
+Frontend em **React + Vite** e backend em **Java + Spring Boot**, com **SQLite** em desenvolvimento
+e **PostgreSQL** disponível para produção.
 
 ---
 
@@ -13,15 +15,15 @@ SaaS de gestão de pacientes, receitas, produtos, fornecedores e conteúdos para
 - **Axios** (cliente HTTP centralizado em `src/services/api.ts`)
 
 ### Backend
-- **Django 5** + **Django REST Framework**
-- **djangorestframework-simplejwt** para autenticação JWT
-- **django-cors-headers** para liberar requisições do frontend
-- **bcrypt** para hash de senha (compatível com hashes legados do backend Node antigo)
+- **Java 21** + **Spring Boot 3.3** (Web, Data JPA, Security)
+- **JWT** (jjwt) para autenticação — token Bearer com claim `id`
+- **BCrypt** para hash de senha (compatível com os hashes legados `$2a$/$2b$`)
 - Servidor de dev na porta `8000`
+- Código em [`spring_backend/`](spring_backend/) (ver o [README do backend](spring_backend/README.md))
 
 ### Banco
-- **SQLite** (`dev.db`) em desenvolvimento
-- **PostgreSQL 15** via `docker-compose.yml` em produção
+- **SQLite** (`dev.db`, na raiz) em desenvolvimento — schema criado pelo Prisma
+- **PostgreSQL 15** via `docker-compose.yml` para produção
 
 ---
 
@@ -29,50 +31,29 @@ SaaS de gestão de pacientes, receitas, produtos, fornecedores e conteúdos para
 
 ### Pré-requisitos
 - Node.js 18+
-- Python 3.11+
+- Java 21+ (o Maven pode ser dispensado usando o wrapper `./mvnw`)
 
 ### 1. Instalar dependências do frontend
 ```bash
 npm install
 ```
 
-### 2. Preparar o backend Django
+### 2. Subir o backend (Spring Boot)
+Em um terminal, a partir de `spring_backend/`:
 ```bash
-cd django_architecture
-python -m venv venv
-# Windows
-venv\Scripts\activate
-# Linux/Mac
-source venv/bin/activate
-
-pip install -r requirements.txt
+cd spring_backend
+./mvnw spring-boot:run      # Linux/Mac
+mvnw.cmd spring-boot:run    # Windows
 ```
+O backend usa o `dev.db` da raiz (caminho padrão `../dev.db`) e sobe em `http://localhost:8000`.
 
-### 3. Sincronizar o banco
-O `dev.db` na raiz é compartilhado pelo Django. Se for a primeira vez ou se vier de uma versão antiga (criada pelo backend Node/Prisma), rode o script de migração — ele adiciona colunas faltantes e converte timestamps Prisma (Unix ms) para ISO:
-```bash
-python migrate_schema.py
-```
-
-Em seguida, aplique as migrations internas do Django (auth, sessions, etc):
-```bash
-python manage.py migrate
-```
-
-### 4. Subir backend e frontend
-Em terminais separados:
-
-**Backend** (na pasta `django_architecture`, com venv ativado):
-```bash
-python manage.py runserver
-```
-
-**Frontend** (na raiz):
+### 3. Subir o frontend (Vite)
+Em outro terminal, na raiz:
 ```bash
 npm run dev
 ```
 
-### 5. Acessar
+### 4. Acessar
 - App: http://localhost:5173
 - API: http://localhost:8000/api
 
@@ -87,11 +68,11 @@ Todas as rotas exigem `Authorization: Bearer <token>` exceto as marcadas como p�
 | POST | `/api/login` | Login (público). Retorna `token` JWT. |
 | POST | `/api/usuarios/registro` | Cadastro (público). |
 | GET | `/api/me` | Dados do usuário autenticado. |
-| GET/POST/PUT/DELETE | `/api/receitas` | CRUD de receitas. |
-| GET/POST/PUT/DELETE | `/api/receitas/categorias` | CRUD de categorias. |
-| ... | `/api/produtos`, `/api/fornecedores`, `/api/chas`, `/api/ifood`, `/api/substituicoes`, `/api/bem-estar`, `/api/dicas` | Mesmo padrão. |
+| GET/POST/PUT/DELETE | `/api/receitas` + `/api/receitas/categorias` | CRUD de receitas (com `ingredientes`/`modosPreparo` aninhados) e categorias. |
+| ... | `/api/produtos`, `/api/fornecedores`, `/api/chas`, `/api/ifood`, `/api/substituicoes`, `/api/bem-estar`, `/api/dicas` | Mesmo padrão (cada um com sua sub-rota `/categorias` quando aplicável). |
 
-URLs aceitam barra final opcional (`/receitas` e `/receitas/` funcionam).
+Listagens com chave estrangeira aceitam filtro por querystring, ex.: `GET /api/receitas?categoriaId=2`.
+Detalhes do contrato e variáveis de ambiente em [`spring_backend/README.md`](spring_backend/README.md).
 
 ---
 
@@ -101,24 +82,14 @@ URLs aceitam barra final opcional (`/receitas` e `/receitas/` funcionam).
    ```bash
    docker-compose up -d
    ```
-
-2. Apontar o Django para o Postgres editando `django_architecture/nutrimind_backend/settings.py` (bloco `DATABASES`) ou via variável de ambiente:
-   ```env
-   DATABASE_URL=postgresql://admin:supersecretpassword@localhost:5432/nutrimind_prod
-   ```
-
-3. Rodar migrations contra o Postgres:
+2. Apontar o backend para o Postgres (trocar driver/dialeto/datasource em
+   `spring_backend/src/main/resources/application.properties` ou via variáveis de ambiente) e
+   migrar os dados do SQLite.
+3. Build do frontend:
    ```bash
-   python manage.py migrate
+   npm run build   # saída em dist/
    ```
-
-4. Build do frontend:
-   ```bash
-   npm run build
-   ```
-   Saída em `dist/`.
-
-5. Servir Django via gunicorn/uvicorn por trás de um reverse proxy.
+4. Empacotar o backend: `cd spring_backend && ./mvnw clean package` (gera o `.jar` em `target/`).
 
 ---
 
@@ -130,11 +101,14 @@ URLs aceitam barra final opcional (`/receitas` e `/receitas/` funcionam).
 │   ├── features/                 # Domínios: auth, admin, recipes, products, etc.
 │   ├── services/api.ts           # Cliente axios + interceptors
 │   └── routes.tsx                # Rotas
-├── django_architecture/          # Backend (Django + DRF)
-│   ├── api/                      # App principal: models, views, serializers, urls
-│   ├── nutrimind_backend/        # Settings, urls raiz, wsgi/asgi
-│   ├── migrate_schema.py         # Migração one-time do schema Prisma → Django
-│   └── manage.py
+├── spring_backend/               # Backend (Java + Spring Boot)
+│   ├── src/main/java/com/nutrimind/
+│   │   ├── entity/               # Entidades JPA (mapeiam as tabelas do dev.db)
+│   │   ├── repository/           # Spring Data JPA
+│   │   ├── web/                  # Controllers (CRUD genérico + agregados + auth)
+│   │   ├── security/             # JWT + filtro de autenticação
+│   │   └── config/               # Segurança, CORS, Jackson
+│   └── pom.xml
 ├── dev.db                        # SQLite de desenvolvimento (compartilhado)
 └── docker-compose.yml            # Postgres para produção
 ```
