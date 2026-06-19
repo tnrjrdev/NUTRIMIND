@@ -9,6 +9,8 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,8 +19,9 @@ import java.util.List;
 @Table(name = "Receita")
 public class Receita extends BaseEntity {
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "categoriaId", nullable = false)
+    @NotFound(action = NotFoundAction.IGNORE)
     private CategoriaReceita categoria;
 
     private String nome;

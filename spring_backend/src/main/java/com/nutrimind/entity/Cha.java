@@ -6,13 +6,16 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 
 @Entity
 @Table(name = "Cha")
 public class Cha extends BaseEntity {
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "categoriaId", nullable = false)
+    @NotFound(action = NotFoundAction.IGNORE)
     private CategoriaCha categoria;
 
     private String nome;
