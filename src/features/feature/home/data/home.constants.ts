@@ -7,4 +7,5 @@ export const menuShortcuts = [
   { id: "6", label: "Substituições", icon: "check", path: "/substituicoes" },
   { id: "7", label: "Bem-estar", icon: "heart", path: "/bem-estar" },
   { id: "8", label: "Dicas", icon: "lamp", path: "/dicas" },
+  { id: "9", label: "Diário Alimentar", icon: "camera", path: "/refeicoes" },
 ];

@@ -110,6 +110,13 @@ function DashboardIcon({ icon, className = 'h-5 w-5' }: { icon: string; classNam
           <path d="M12 3a7 7 0 0 0-3.5 13H15.5A7 7 0 0 0 12 3z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       );
+    case 'camera':
+      return (
+        <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
+          <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+          <circle cx="12" cy="13" r="4" stroke="currentColor" strokeWidth="1.8" />
+        </svg>
+      );
     default:
       return (
         <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
