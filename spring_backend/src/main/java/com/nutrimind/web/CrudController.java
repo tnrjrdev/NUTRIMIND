@@ -90,10 +90,28 @@ public abstract class CrudController<T> {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
-        if (!repository.existsById(id)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        T entity = repository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        // "Inativar": soft delete (ativo=false) quando a entidade tem o campo;
+        // entidades sem "ativo" (ex.: filhos de agregados) sao removidas de fato.
+        if (setAtivoFalse(entity)) {
+            repository.save(entity);
+        } else {
+            repository.delete(entity);
         }
-        repository.deleteById(id);
+    }
+
+    private boolean setAtivoFalse(T entity) {
+        try {
+            Field ativo = type.getDeclaredField("ativo");
+            ativo.setAccessible(true);
+            ativo.set(entity, false);
+            return true;
+        } catch (NoSuchFieldException e) {
+            return false;
+        } catch (IllegalAccessException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     protected T doUpdate(Long id, JsonNode body) {

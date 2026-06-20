@@ -104,10 +104,11 @@ public class UsuarioController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        if (!repository.existsById(id)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
-        repository.deleteById(id);
+        // "Inativar" usuario: soft delete (ativo=false), preservando o registro.
+        Usuario usuario = repository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        usuario.setAtivo(false);
+        repository.save(usuario);
         return ResponseEntity.noContent().build();
     }
 
