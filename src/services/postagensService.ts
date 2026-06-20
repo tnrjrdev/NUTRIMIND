@@ -6,8 +6,10 @@ export interface PostagemAlimentar {
   id: number;
   legenda: string;
   imagemUrl: string; // URL assinada
-  tipoRefeicao?: TipoRefeicao | null;
-  capturadaEm?: string | null;
+  tipoRefeicao: TipoRefeicao;
+  capturadaEm: string;
+  nivelFome?: number;
+  emocao?: string;
   curtido: boolean;
   totalCurtidas: number;
   createdAt: string;
@@ -32,6 +34,9 @@ export interface CriarPostagemInput {
   legenda?: string;
   tipoRefeicao?: TipoRefeicao;
   capturadaEm?: string;
+  nivelFome?: number;
+  emocao?: string;
+  nutricionistaId?: number;
 }
 
 export const TIPOS_IMAGEM_PERMITIDOS = ['image/jpeg', 'image/png', 'image/webp'];
@@ -54,6 +59,11 @@ export const postagensService = {
 
   getPostagem: async (id: number) => {
     const response = await api.get<PostagemAlimentar>(`/postagens/${id}`);
+    return response.data;
+  },
+
+  getNutricionistas: async () => {
+    const response = await api.get<{id: number, nome: string}[]>('/usuarios/nutricionistas');
     return response.data;
   },
 

@@ -37,6 +37,8 @@ public class DevSeeder implements CommandLineRunner {
             System.out.println("=== Nutricionista de teste criado: nutri@teste.com / senha123 ===");
         } else {
             nutri = usuarioRepository.findByEmail(emailNutri).get();
+            nutri.setSenhaHash(passwordEncoder.encode("senha123"));
+            usuarioRepository.save(nutri);
         }
 
         // Criar paciente de teste vinculado ao nutri
@@ -52,12 +54,13 @@ public class DevSeeder implements CommandLineRunner {
             usuarioRepository.save(paciente);
             System.out.println("=== Paciente de teste criado e vinculado: paciente@teste.com / senha123 ===");
         } else {
-            // Garante o vinculo
+            // Garante o vinculo e atualiza a senha
             Usuario paciente = usuarioRepository.findByEmail(emailPaciente).get();
+            paciente.setSenhaHash(passwordEncoder.encode("senha123"));
             if (paciente.getNutricionista() == null) {
                 paciente.setNutricionista(nutri);
-                usuarioRepository.save(paciente);
             }
+            usuarioRepository.save(paciente);
         }
     }
 }

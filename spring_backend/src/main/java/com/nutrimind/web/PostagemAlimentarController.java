@@ -192,6 +192,22 @@ public class PostagemAlimentarController {
         if (body.hasNonNull("tipoRefeicao")) {
             postagem.setTipoRefeicao(parseTipo(body.get("tipoRefeicao").asText()));
         }
+        
+        if (body.hasNonNull("nivelFome")) {
+            postagem.setNivelFome(body.get("nivelFome").asInt());
+        }
+        
+        if (body.hasNonNull("emocao")) {
+            postagem.setEmocao(body.get("emocao").asText());
+        }
+
+        if (body.hasNonNull("nutricionistaId")) {
+            Usuario nutri = usuarioRepository.findById(body.get("nutricionistaId").asLong()).orElse(null);
+            if (nutri != null && nutri.getPapelEfetivo() == com.nutrimind.entity.Papel.NUTRICIONISTA) {
+                paciente.setNutricionista(nutri);
+                usuarioRepository.save(paciente);
+            }
+        }
 
         postagem = postagemRepository.save(postagem);
         

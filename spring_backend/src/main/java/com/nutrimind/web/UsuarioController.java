@@ -45,6 +45,14 @@ public class UsuarioController {
         return repository.findAll();
     }
 
+    @GetMapping("/nutricionistas")
+    public List<Map<String, Object>> listarNutricionistas() {
+        return repository.findByPapel(Papel.NUTRICIONISTA).stream()
+                .filter(u -> Boolean.TRUE.equals(u.getAtivo()))
+                .map(u -> Map.of("id", (Object) u.getId(), "nome", (Object) u.getNome()))
+                .toList();
+    }
+
     @GetMapping("/{id}")
     public Usuario get(@PathVariable Long id) {
         return repository.findById(id)

@@ -32,6 +32,11 @@ public class PostagemAlimentar extends BaseEntity {
 
     private LocalDateTime capturadaEm;
 
+    @Column(name = "nivel_fome")
+    private Integer nivelFome;
+
+    @Column(name = "emocao")
+    private String emocao;
     public Usuario getPaciente() {
         return paciente;
     }
@@ -78,5 +83,21 @@ public class PostagemAlimentar extends BaseEntity {
 
     public void setCapturadaEm(LocalDateTime capturadaEm) {
         this.capturadaEm = capturadaEm;
+    }
+
+    public Integer getNivelFome() {
+        return nivelFome;
+    }
+
+    public void setNivelFome(Integer nivelFome) {
+        this.nivelFome = nivelFome;
+    }
+
+    public String getEmocao() {
+        return emocao;
+    }
+
+    public void setEmocao(String emocao) {
+        this.emocao = emocao;
     }
 }
