@@ -7,7 +7,9 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface PostagemAlimentarRepository extends JpaRepository<PostagemAlimentar, Long> {
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+
+public interface PostagemAlimentarRepository extends JpaRepository<PostagemAlimentar, Long>, JpaSpecificationExecutor<PostagemAlimentar> {
 
     @Query("SELECT p FROM PostagemAlimentar p WHERE p.paciente.id = :pacienteId ORDER BY p.createdAt DESC")
     List<PostagemAlimentar> feedDoPaciente(@Param("pacienteId") Long pacienteId);

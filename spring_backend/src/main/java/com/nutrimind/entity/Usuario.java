@@ -60,6 +60,12 @@ public class Usuario {
     @Column(name = "updated_at")
     private String updatedAt;
 
+    @Column(name = "consentimento_lgpd_em")
+    private String consentimentoLgpdEm;
+
+    @Column(name = "consentimento_versao")
+    private String consentimentoVersao;
+
     @PrePersist
     void onCreate() {
         String now = ZonedDateTime.now(ZoneOffset.UTC).format(ISO);
@@ -143,5 +149,21 @@ public class Usuario {
 
     public String getUpdatedAt() {
         return updatedAt;
+    }
+
+    public String getConsentimentoLgpdEm() {
+        return consentimentoLgpdEm;
+    }
+
+    public void setConsentimentoLgpdEm(String consentimentoLgpdEm) {
+        this.consentimentoLgpdEm = consentimentoLgpdEm;
+    }
+
+    public String getConsentimentoVersao() {
+        return consentimentoVersao;
+    }
+
+    public void setConsentimentoVersao(String consentimentoVersao) {
+        this.consentimentoVersao = consentimentoVersao;
     }
 }

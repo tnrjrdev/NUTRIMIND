@@ -9,6 +9,7 @@ import {
   TAMANHO_MAX_IMAGEM,
   TIPOS_IMAGEM_PERMITIDOS,
 } from '../../../services/postagensService';
+import { getStoredUser } from '../../auth/utils/session';
 
 const TIPO_LABELS: Record<TipoRefeicao, string> = {
   CAFE_DA_MANHA: 'Café da manhã',
@@ -28,14 +29,31 @@ export function RefeicoesPage() {
   const [tipoRefeicao, setTipoRefeicao] = useState<TipoRefeicao | ''>('');
   const [enviando, setEnviando] = useState(false);
 
+  const [page, setPage] = useState(0);
+  const [lastPage, setLastPage] = useState(true);
+
+  const user = getStoredUser();
+  const isNutricionista = user?.papel === 'NUTRICIONISTA';
+
   useEffect(() => {
     loadRefeicoes();
   }, []);
 
-  const loadRefeicoes = async () => {
+  const loadRefeicoes = async (isLoadMore = false) => {
     try {
-      const data = await postagensService.getPostagens();
-      setRefeicoes(data);
+      const nextPage = isLoadMore ? page + 1 : 0;
+      const data = await postagensService.getPostagens(undefined, nextPage);
+      
+      const content = Array.isArray(data) ? data : (data?.content || []);
+      
+      if (isLoadMore) {
+        setRefeicoes([...refeicoes, ...content]);
+      } else {
+        setRefeicoes(content);
+      }
+      
+      setPage(nextPage);
+      setLastPage(data?.last ?? true);
     } catch (error) {
       toast.error('Erro ao carregar o feed de refeições');
     } finally {
@@ -89,15 +107,16 @@ export function RefeicoesPage() {
   return (
     <PublicScaffold
       title="Diário Alimentar"
-      eyebrow="Acompanhamento"
+      eyebrow={isNutricionista ? "Acompanhamento de Pacientes" : "Acompanhamento"}
       heroImage="https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&w=1400&q=80"
       backTo="/home"
     >
       <div className="p-6 mx-auto pb-24">
         {/* Formulário de Envio */}
-        <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-8">
-          <h2 className="text-lg font-semibold mb-4 text-gray-700">Compartilhar Refeição</h2>
-          <form onSubmit={handleSubmit} className="space-y-4">
+        {!isNutricionista && (
+          <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-8">
+            <h2 className="text-lg font-semibold mb-4 text-gray-700">Compartilhar Refeição</h2>
+            <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Foto da Refeição</label>
               <input
@@ -141,6 +160,7 @@ export function RefeicoesPage() {
             </button>
           </form>
         </div>
+        )}
 
         {/* Feed de Refeições */}
         <div className="space-y-6">
@@ -201,6 +221,17 @@ export function RefeicoesPage() {
                 </div>
               </div>
             ))
+          )}
+          
+          {!lastPage && (
+            <div className="text-center pt-4">
+              <button 
+                onClick={() => loadRefeicoes(true)}
+                className="bg-green-50 text-green-700 font-medium py-2 px-6 rounded-full hover:bg-green-100 transition-colors"
+              >
+                Carregar mais
+              </button>
+            </div>
           )}
         </div>
       </div>

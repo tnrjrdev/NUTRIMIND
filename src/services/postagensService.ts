@@ -45,9 +45,9 @@ export interface FeedFilters {
 }
 
 export const postagensService = {
-  getPostagens: async (filters?: FeedFilters) => {
-    const response = await api.get<PostagemAlimentar[]>('/postagens', {
-      params: filters,
+  getPostagens: async (filters?: FeedFilters, page: number = 0, size: number = 20) => {
+    const response = await api.get<{ content: PostagemAlimentar[], totalPages: number, last: boolean }>('/postagens', {
+      params: { ...filters, page, size },
     });
     return response.data;
   },

@@ -7,20 +7,25 @@ import com.nutrimind.entity.PostagemAlimentar;
 import com.nutrimind.entity.TipoRefeicao;
 import com.nutrimind.entity.Usuario;
 import com.nutrimind.entity.ImagemStatus;
-import com.nutrimind.entity.Notificacao;
+import com.nutrimind.entity.LogAcessoPostagem;
+import com.nutrimind.event.InteracaoCriadaEvent;
+import com.nutrimind.event.PostagemCriadaEvent;
 import com.nutrimind.repository.ComentarioRepository;
 import com.nutrimind.repository.CurtidaRepository;
-import com.nutrimind.repository.NotificacaoRepository;
+import com.nutrimind.repository.LogAcessoPostagemRepository;
 import com.nutrimind.repository.PostagemAlimentarRepository;
+import com.nutrimind.repository.PostagemAlimentarSpecs;
 import com.nutrimind.repository.UsuarioRepository;
 import com.nutrimind.storage.ArmazenamentoService;
 import com.nutrimind.storage.UrlAssinada;
 import com.nutrimind.web.dto.ComentarioDTO;
 import com.nutrimind.web.dto.PostagemDTO;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -45,26 +50,29 @@ public class PostagemAlimentarController {
     private final CurtidaRepository curtidaRepository;
     private final ComentarioRepository comentarioRepository;
     private final UsuarioRepository usuarioRepository;
-    private final NotificacaoRepository notificacaoRepository;
+    private final LogAcessoPostagemRepository logAcessoRepository;
     private final ArmazenamentoService armazenamento;
     private final UrlAssinada urlAssinada;
+    private final ApplicationEventPublisher eventPublisher;
     private final String baseUrl;
 
     public PostagemAlimentarController(PostagemAlimentarRepository postagemRepository,
                                        CurtidaRepository curtidaRepository,
                                        ComentarioRepository comentarioRepository,
                                        UsuarioRepository usuarioRepository,
-                                       NotificacaoRepository notificacaoRepository,
+                                       LogAcessoPostagemRepository logAcessoRepository,
                                        ArmazenamentoService armazenamento,
                                        UrlAssinada urlAssinada,
+                                       ApplicationEventPublisher eventPublisher,
                                        @Value("${nutrimind.app.base-url}") String baseUrl) {
         this.postagemRepository = postagemRepository;
         this.curtidaRepository = curtidaRepository;
         this.comentarioRepository = comentarioRepository;
         this.usuarioRepository = usuarioRepository;
-        this.notificacaoRepository = notificacaoRepository;
+        this.logAcessoRepository = logAcessoRepository;
         this.armazenamento = armazenamento;
         this.urlAssinada = urlAssinada;
+        this.eventPublisher = eventPublisher;
         this.baseUrl = baseUrl;
     }
 
@@ -99,44 +107,42 @@ public class PostagemAlimentarController {
     }
 
     @GetMapping
-    public List<PostagemDTO> feed(
+    public Page<PostagemDTO> feed(
             @RequestParam(name = "pacienteId", required = false) Long pacienteId,
             @RequestParam(name = "tipo", required = false) String tipo,
             @RequestParam(name = "dataIni", required = false) @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME) LocalDateTime dataIni,
-            @RequestParam(name = "dataFim", required = false) @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME) LocalDateTime dataFim
+            @RequestParam(name = "dataFim", required = false) @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME) LocalDateTime dataFim,
+            Pageable pageable,
+            HttpServletRequest request
     ) {
         Usuario logado = usuarioLogado();
 
-        List<PostagemAlimentar> postagens = switch (logado.getPapelEfetivo()) {
-            case PACIENTE -> postagemRepository.feedDoPaciente(logado.getId());
-            case NUTRICIONISTA -> {
-                List<PostagemAlimentar> feed = postagemRepository.feedDoNutricionista(logado.getId());
-                yield pacienteId == null ? feed
-                        : feed.stream().filter(p -> p.getPaciente().getId().equals(pacienteId)).toList();
-            }
-            case ADMIN -> pacienteId != null
-                    ? postagemRepository.feedDoPaciente(pacienteId)
-                    : postagemRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
+        Specification<PostagemAlimentar> spec = switch (logado.getPapelEfetivo()) {
+            case PACIENTE -> PostagemAlimentarSpecs.doPaciente(logado.getId());
+            case NUTRICIONISTA -> PostagemAlimentarSpecs.dosPacientesDe(logado.getId());
+            case ADMIN -> Specification.where(null);
         };
 
-        java.util.stream.Stream<PostagemAlimentar> stream = postagens.stream();
+        TipoRefeicao tipoEnum = (tipo != null && !tipo.isBlank()) ? parseTipo(tipo) : null;
+        spec = spec.and(PostagemAlimentarSpecs.filtros(pacienteId, tipoEnum, dataIni, dataFim));
+
+        Page<PostagemAlimentar> page = postagemRepository.findAll(spec, pageable);
         
-        if (tipo != null && !tipo.isBlank()) {
-            TipoRefeicao tipoEnum = parseTipo(tipo);
-            stream = stream.filter(p -> p.getTipoRefeicao() == tipoEnum);
-        }
-        if (dataIni != null) {
-            stream = stream.filter(p -> p.getCapturadaEm() != null && !p.getCapturadaEm().isBefore(dataIni));
-        }
-        if (dataFim != null) {
-            stream = stream.filter(p -> p.getCapturadaEm() != null && !p.getCapturadaEm().isAfter(dataFim));
+        // Log de acesso para compliance LGPD se for o nutricionista consultando dados
+        if (logado.getPapelEfetivo() == com.nutrimind.entity.Papel.NUTRICIONISTA) {
+            String ip = request.getRemoteAddr();
+            page.getContent().forEach(p -> {
+                if (!p.getPaciente().getId().equals(logado.getId())) {
+                    logAcessoRepository.save(new LogAcessoPostagem(logado, p, "VISUALIZAR_FEED", ip));
+                }
+            });
         }
 
-        return stream.map(p -> toDTO(p, logado)).toList();
+        return page.map(p -> toDTO(p, logado));
     }
 
     @GetMapping("/{id}")
-    public PostagemDTO getById(@PathVariable("id") Long id) {
+    public PostagemDTO getById(@PathVariable("id") Long id, HttpServletRequest request) {
         Usuario logado = usuarioLogado();
         PostagemAlimentar postagem = postagemRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Postagem não encontrada"));
@@ -144,6 +150,11 @@ public class PostagemAlimentarController {
         if (!podeAcessar(logado, postagem)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Acesso negado");
         }
+        
+        if (!postagem.getPaciente().getId().equals(logado.getId())) {
+            logAcessoRepository.save(new LogAcessoPostagem(logado, postagem, "VISUALIZAR_DETALHE", request.getRemoteAddr()));
+        }
+
         return toDTO(postagem, logado);
     }
 
@@ -182,7 +193,12 @@ public class PostagemAlimentarController {
             postagem.setTipoRefeicao(parseTipo(body.get("tipoRefeicao").asText()));
         }
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(toDTO(postagemRepository.save(postagem), paciente));
+        postagem = postagemRepository.save(postagem);
+        
+        // Dispara evento assíncrono para notificação
+        eventPublisher.publishEvent(new PostagemCriadaEvent(postagem, paciente));
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(toDTO(postagem, paciente));
     }
 
     @DeleteMapping("/{id}")
@@ -218,11 +234,7 @@ public class PostagemAlimentarController {
         
         if (!curtidaRepository.existsByPostagemIdAndAutorId(id, logado.getId())) {
             curtidaRepository.save(new Curtida(postagem, logado));
-            
-            if (!postagem.getPaciente().getId().equals(logado.getId())) {
-                String mensagem = logado.getNome() + " curtiu sua publicação.";
-                notificacaoRepository.save(new Notificacao(postagem.getPaciente(), mensagem, "/postagens/" + id));
-            }
+            eventPublisher.publishEvent(new InteracaoCriadaEvent(postagem, logado, "CURTIDA"));
         }
         return ResponseEntity.ok().build();
     }
@@ -259,10 +271,7 @@ public class PostagemAlimentarController {
         
         ComentarioDTO dto = ComentarioDTO.de(comentarioRepository.save(comentario));
         
-        if (!postagem.getPaciente().getId().equals(logado.getId())) {
-            String mensagem = logado.getNome() + " comentou na sua publicação.";
-            notificacaoRepository.save(new Notificacao(postagem.getPaciente(), mensagem, "/postagens/" + id));
-        }
+        eventPublisher.publishEvent(new InteracaoCriadaEvent(postagem, logado, "COMENTARIO"));
         
         return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }

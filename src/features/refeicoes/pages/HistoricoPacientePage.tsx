@@ -10,10 +10,24 @@ export function HistoricoPacientePage() {
   const [refeicoes, setRefeicoes] = useState<PostagemAlimentar[]>([]);
   const [filters, setFilters] = useState<FeedFilters>({ pacienteId: Number(pacienteId) });
   
-  const loadRefeicoes = async () => {
+  const [page, setPage] = useState(0);
+  const [lastPage, setLastPage] = useState(true);
+  
+  const loadRefeicoes = async (isLoadMore = false) => {
     try {
-      const data = await postagensService.getPostagens(filters);
-      setRefeicoes(data);
+      const nextPage = isLoadMore ? page + 1 : 0;
+      const data = await postagensService.getPostagens(filters, nextPage);
+      
+      const content = Array.isArray(data) ? data : (data?.content || []);
+      
+      if (isLoadMore) {
+        setRefeicoes([...refeicoes, ...content]);
+      } else {
+        setRefeicoes(content);
+      }
+      
+      setPage(nextPage);
+      setLastPage(data?.last ?? true);
     } catch (error) {
       console.error('Erro ao carregar histórico:', error);
     }
@@ -114,6 +128,17 @@ export function HistoricoPacientePage() {
                 </div>
               </div>
             ))
+          )}
+
+          {!lastPage && (
+            <div className="text-center pt-4">
+              <button 
+                onClick={() => loadRefeicoes(true)}
+                className="bg-green-50 text-green-700 font-medium py-2 px-6 rounded-full hover:bg-green-100 transition-colors"
+              >
+                Carregar mais
+              </button>
+            </div>
           )}
         </div>
       </div>
