@@ -46,6 +46,10 @@ public class SecurityConfig {
                         // Rotas publicas (espelham AllowAny do Django)
                         .requestMatchers(HttpMethod.POST, "/api/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/usuarios/registro").permitAll()
+                        // Imagem servida via URL assinada (a assinatura HMAC e a credencial)
+                        .requestMatchers(HttpMethod.GET, "/api/postagens/imagem/**").permitAll()
+                        // Mock S3 para dev
+                        .requestMatchers(HttpMethod.PUT, "/api/postagens/local-upload").permitAll()
                         // Todo o resto exige JWT (DEFAULT_PERMISSION_CLASSES = IsAuthenticated)
                         .anyRequest().authenticated())
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(
