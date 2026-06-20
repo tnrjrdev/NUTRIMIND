@@ -80,6 +80,16 @@ export function IfoodAdminPage() {
     fetchData();
   };
 
+  const handleHardDelete = async (id: number) => {
+    if (!confirm('Excluir DEFINITIVAMENTE? Esta ação não pode ser desfeita.')) return;
+    try {
+      await api.delete(`/ifood/${id}?hard=true`);
+      fetchData();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   if (viewState === 'form') {
     return (
       <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
@@ -118,7 +128,7 @@ export function IfoodAdminPage() {
               <tr key={item.id} className="border-t">
                 <td className="p-4">{item.nome}</td>
                 <td className="p-4">{item.categoria?.nome}</td>
-                <td className="p-4"><button onClick={() => handleEdit(item)} className="mr-3 text-blue-600">Editar</button><button onClick={() => handleDelete(item.id)} className="text-red-500">Inativar</button></td>
+                <td className="p-4"><button onClick={() => handleEdit(item)} className="mr-3 text-blue-600">Editar</button><button onClick={() => handleDelete(item.id)} className="text-red-500">Inativar</button><button onClick={() => handleHardDelete(item.id)} className="ml-3 text-red-700 font-semibold">Excluir</button></td>
               </tr>
             ))}
           </tbody>

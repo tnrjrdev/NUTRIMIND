@@ -156,6 +156,17 @@ export function RecipesPage() {
     }
   };
 
+  const handleHardDelete = async (id: number) => {
+    if (!confirm('Excluir DEFINITIVAMENTE? Esta ação não pode ser desfeita.')) return;
+
+    try {
+      await api.delete(`/receitas/categorias/${id}?hard=true`);
+      await fetchCategories();
+    } catch {
+      setError('Nao foi possivel excluir a categoria.');
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
@@ -317,6 +328,14 @@ export function RecipesPage() {
                         >
                           <TrashIcon />
                           Inativar
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleHardDelete(category.id)}
+                          className="inline-flex items-center gap-2 rounded-full border border-red-600 bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-700"
+                        >
+                          <TrashIcon />
+                          Excluir
                         </button>
                       </div>
                     </div>

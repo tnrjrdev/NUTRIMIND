@@ -106,6 +106,16 @@ export function ReceitasAdminPage() {
     }
   };
 
+  const handleHardDelete = async (id: number) => {
+    if (!confirm('Excluir DEFINITIVAMENTE? Esta ação não pode ser desfeita.')) return;
+    try {
+      await api.delete(`/receitas/${id}?hard=true`);
+      fetchData();
+    } catch {
+      alert('Não foi possível excluir. Verifique se há itens vinculados.');
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.categoriaId) return setError('Selecione uma categoria.');
@@ -256,6 +266,7 @@ export function ReceitasAdminPage() {
                   <td className="px-6 py-4 text-right space-x-2">
                     <button onClick={() => handleEdit(rec)} className="text-blue-600 hover:underline">Editar</button>
                     <button onClick={() => handleDelete(rec.id)} className="text-red-500 hover:underline">Inativar</button>
+                    <button onClick={() => handleHardDelete(rec.id)} className="text-red-700 font-semibold hover:underline">Excluir</button>
                   </td>
                 </tr>
               ))}

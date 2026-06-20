@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -103,12 +104,18 @@ public class UsuarioController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        // "Inativar" usuario: soft delete (ativo=false), preservando o registro.
+    public ResponseEntity<Void> delete(@PathVariable Long id,
+                                       @RequestParam(name = "hard", defaultValue = "false") boolean hard) {
         Usuario usuario = repository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        usuario.setAtivo(false);
-        repository.save(usuario);
+        if (hard) {
+            // "Excluir": remocao fisica do usuario.
+            repository.delete(usuario);
+        } else {
+            // "Inativar": soft delete (ativo=false), preservando o registro.
+            usuario.setAtivo(false);
+            repository.save(usuario);
+        }
         return ResponseEntity.noContent().build();
     }
 

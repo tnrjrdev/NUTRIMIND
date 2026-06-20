@@ -221,6 +221,20 @@ export function ChaCategoryPage() {
     }
   };
 
+  const handleHardDelete = async (id: number) => {
+    if (!confirm('Excluir DEFINITIVAMENTE? Esta ação não pode ser desfeita.')) return;
+
+    try {
+      await api.delete(`/chas/${id}?hard=true`);
+      if (selectedId === id) {
+        setSelectedId(null);
+      }
+      await fetchData();
+    } catch {
+      setError('Não foi possível excluir. Verifique se há itens vinculados.');
+    }
+  };
+
   return (
     <PublicScaffold
       title={currentCategory ? `Chas - ${currentCategory.nome}` : 'Chas da categoria'}
@@ -358,6 +372,14 @@ export function ChaCategoryPage() {
                           >
                             <TrashIcon />
                             Inativar
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => void handleHardDelete(item.id)}
+                            className="inline-flex items-center justify-center gap-2 rounded-full border border-red-600 bg-red-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-red-700"
+                          >
+                            <TrashIcon />
+                            Excluir
                           </button>
                         </div>
                       )}

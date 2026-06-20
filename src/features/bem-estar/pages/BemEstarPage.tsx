@@ -193,6 +193,20 @@ export function BemEstarPage() {
     }
   };
 
+  const handleHardDelete = async (id: number) => {
+    if (!confirm('Excluir DEFINITIVAMENTE? Esta ação não pode ser desfeita.')) return;
+
+    try {
+      await api.delete(`/bem-estar/${id}?hard=true`);
+      if (selectedId === id) {
+        setSelectedId(null);
+      }
+      await fetchItems();
+    } catch {
+      setError('Nao foi possivel excluir o item.');
+    }
+  };
+
   return (
     <PublicScaffold
       title="Bem-estar"
@@ -325,6 +339,14 @@ export function BemEstarPage() {
                           >
                             <TrashIcon />
                             Inativar
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => void handleHardDelete(item.id)}
+                            className="inline-flex items-center justify-center gap-2 rounded-full border border-red-600 bg-red-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-red-700"
+                          >
+                            <TrashIcon />
+                            Excluir
                           </button>
                         </div>
                       )}

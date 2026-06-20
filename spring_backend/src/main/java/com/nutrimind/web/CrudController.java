@@ -89,12 +89,14 @@ public abstract class CrudController<T> {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long id) {
+    public void delete(@PathVariable Long id,
+                       @RequestParam(name = "hard", defaultValue = "false") boolean hard) {
         T entity = repository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        // "Inativar": soft delete (ativo=false) quando a entidade tem o campo;
-        // entidades sem "ativo" (ex.: filhos de agregados) sao removidas de fato.
-        if (setAtivoFalse(entity)) {
+        // Padrao: "Inativar" = soft delete (ativo=false) quando a entidade tem o campo.
+        // ?hard=true: "Excluir" = remocao fisica (cascateia filhos de agregados;
+        // bloqueada por FK quando ha dependentes -> 409 via GlobalExceptionHandler).
+        if (!hard && setAtivoFalse(entity)) {
             repository.save(entity);
         } else {
             repository.delete(entity);
