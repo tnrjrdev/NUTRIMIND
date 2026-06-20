@@ -147,8 +147,8 @@ export function AppSidebar() {
         </div>
       </div>
 
-      <nav className="mt-6 grid gap-1.5 flex-1">
-        <p className="mb-2 pl-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-emerald-200">
+      <nav className="mt-6 flex flex-col gap-1.5 flex-1 overflow-y-auto pb-4 custom-scrollbar">
+        <p className="mb-2 pl-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-emerald-200 shrink-0">
           Menu Principal
         </p>
         {menuItems.map((item) => {

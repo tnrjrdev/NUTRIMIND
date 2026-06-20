@@ -175,6 +175,20 @@ export function DicasPage() {
     }
   };
 
+  const handleHardDelete = async (id: number) => {
+    if (!confirm('Excluir DEFINITIVAMENTE? Esta ação não pode ser desfeita.')) return;
+
+    try {
+      await api.delete(`/dicas/${id}?hard=true`);
+      if (selectedId === id) {
+        setSelectedId(null);
+      }
+      await fetchItems();
+    } catch {
+      setError('Nao foi possivel excluir a dica.');
+    }
+  };
+
   return (
     <PublicScaffold
       title="Dicas"
@@ -299,6 +313,14 @@ export function DicasPage() {
                           >
                             <TrashIcon />
                             Inativar
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => void handleHardDelete(item.id)}
+                            className="inline-flex items-center justify-center gap-2 rounded-full border border-red-600 bg-red-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-red-700"
+                          >
+                            <TrashIcon />
+                            Excluir
                           </button>
                         </div>
                       )}

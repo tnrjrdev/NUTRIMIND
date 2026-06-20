@@ -1,11 +1,13 @@
 package com.nutrimind.web;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.nutrimind.entity.Papel;
 import com.nutrimind.entity.Usuario;
 import com.nutrimind.repository.UsuarioRepository;
 import com.nutrimind.security.JwtService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -68,6 +71,7 @@ public class UsuarioController {
         usuario.setEmail(email);
         usuario.setSenhaHash(passwordEncoder.encode(senha));
         usuario.setAtivo(body.has("ativo") ? body.get("ativo").asBoolean(true) : true);
+        aplicarPapelEVinculo(usuario, body);
         return ResponseEntity.status(HttpStatus.CREATED).body(repository.save(usuario));
     }
 
@@ -99,15 +103,58 @@ public class UsuarioController {
         if (!isBlank(senha)) {
             usuario.setSenhaHash(passwordEncoder.encode(senha));
         }
+        aplicarPapelEVinculo(usuario, body);
         return ResponseEntity.ok(repository.save(usuario));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        if (!repository.existsById(id)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+    /**
+     * Define papel (PACIENTE/NUTRICIONISTA/ADMIN) e o nutricionista vinculado, quando enviados.
+     * Apenas ADMIN pode alterar esses campos (evita escalonamento de privilegio).
+     */
+    private void aplicarPapelEVinculo(Usuario usuario, JsonNode body) {
+        boolean alteraPapel = body.hasNonNull("papel");
+        boolean alteraVinculo = body.has("nutricionistaId");
+        if (!alteraPapel && !alteraVinculo) {
+            return;
         }
-        repository.deleteById(id);
+        if (usuarioLogado().getPapelEfetivo() != Papel.ADMIN) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                    "Apenas administradores podem definir papel ou vinculo.");
+        }
+        if (body.hasNonNull("papel")) {
+            try {
+                usuario.setPapel(Papel.valueOf(body.get("papel").asText()));
+            } catch (IllegalArgumentException e) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        "papel invalido: " + body.get("papel").asText());
+            }
+        }
+        if (body.has("nutricionistaId")) {
+            JsonNode node = body.get("nutricionistaId");
+            if (node.isNull()) {
+                usuario.setNutricionista(null);
+            } else {
+                Usuario nutri = repository.findById(node.asLong())
+                        .orElseThrow(() -> new ResponseStatusException(
+                                HttpStatus.BAD_REQUEST, "nutricionista inexistente"));
+                usuario.setNutricionista(nutri);
+            }
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id,
+                                       @RequestParam(name = "hard", defaultValue = "false") boolean hard) {
+        Usuario usuario = repository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        if (hard) {
+            // "Excluir": remocao fisica do usuario.
+            repository.delete(usuario);
+        } else {
+            // "Inativar": soft delete (ativo=false), preservando o registro.
+            usuario.setAtivo(false);
+            repository.save(usuario);
+        }
         return ResponseEntity.noContent().build();
     }
 
@@ -132,6 +179,7 @@ public class UsuarioController {
         usuario.setEmail(email);
         usuario.setSenhaHash(passwordEncoder.encode(senha));
         usuario.setAtivo(true);
+        usuario.setPapel(Papel.PACIENTE);
         usuario = repository.save(usuario);
 
         String token = jwtService.generateToken(usuario.getId());
@@ -139,6 +187,15 @@ public class UsuarioController {
                 "auth", true,
                 "token", token,
                 "user", usuario));
+    }
+
+    private Usuario usuarioLogado() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (!(principal instanceof Long userId)) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Usuario nao autenticado");
+        }
+        return repository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Usuario nao encontrado"));
     }
 
     private static String text(JsonNode node, String key) {

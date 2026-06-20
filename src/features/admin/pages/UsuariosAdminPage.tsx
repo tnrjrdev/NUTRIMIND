@@ -69,6 +69,17 @@ export function UsuariosAdminPage() {
     }
   };
 
+  const handleHardDelete = async (id: number) => {
+    if (!confirm('Excluir DEFINITIVAMENTE? Esta ação não pode ser desfeita.')) return;
+
+    try {
+      await api.delete(`/usuarios/${id}?hard=true`);
+      await fetchUsuarios();
+    } catch {
+      setError('Não foi possível excluir. Verifique se há itens vinculados.');
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -201,6 +212,7 @@ export function UsuariosAdminPage() {
                 <td className="px-6 py-4 text-right">
                   <button onClick={() => handleEdit(usuario)} className="mr-3 text-blue-600 hover:underline">Editar</button>
                   <button onClick={() => handleDelete(usuario.id)} className="text-red-500 hover:underline">Inativar</button>
+                  <button onClick={() => handleHardDelete(usuario.id)} className="ml-3 text-red-700 font-semibold hover:underline">Excluir</button>
                 </td>
               </tr>
             ))}

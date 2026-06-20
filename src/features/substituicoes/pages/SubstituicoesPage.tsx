@@ -178,6 +178,20 @@ export function SubstituicoesPage() {
     }
   };
 
+  const handleHardDelete = async (id: number) => {
+    if (!confirm('Excluir DEFINITIVAMENTE? Esta ação não pode ser desfeita.')) return;
+
+    try {
+      await api.delete(`/substituicoes/categorias/${id}?hard=true`);
+      if (selectedId === id) {
+        setSelectedId(null);
+      }
+      await fetchCategories();
+    } catch {
+      setError('Nao foi possivel excluir a categoria.');
+    }
+  };
+
   return (
     <PublicScaffold
       title="Lista de substituicao"
@@ -306,6 +320,14 @@ export function SubstituicoesPage() {
                           >
                             <TrashIcon />
                             Inativar
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => void handleHardDelete(category.id)}
+                            className="inline-flex items-center justify-center gap-2 rounded-full border border-red-600 bg-red-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-red-700"
+                          >
+                            <TrashIcon />
+                            Excluir
                           </button>
                         </div>
                       )}

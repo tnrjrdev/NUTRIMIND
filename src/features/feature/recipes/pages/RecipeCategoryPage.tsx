@@ -186,6 +186,20 @@ export function RecipeCategoryPage() {
     }
   };
 
+  const handleHardDelete = async (recipeId: number) => {
+    if (!confirm('Excluir DEFINITIVAMENTE? Esta ação não pode ser desfeita.')) return;
+
+    try {
+      await api.delete(`/receitas/${recipeId}?hard=true`);
+      if (selectedId === recipeId) {
+        setSelectedId(null);
+      }
+      await fetchData();
+    } catch {
+      setError('Não foi possível excluir. Verifique se há itens vinculados.');
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -397,6 +411,14 @@ export function RecipeCategoryPage() {
                           >
                             <TrashIcon />
                             Inativar
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => void handleHardDelete(item.id)}
+                            className="inline-flex items-center justify-center gap-2 rounded-full border border-red-600 bg-red-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-red-700"
+                          >
+                            <TrashIcon />
+                            Excluir
                           </button>
                         </div>
                       )}

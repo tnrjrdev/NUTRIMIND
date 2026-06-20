@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { UserProfile } from "../types/home.types";
 import { clearAuthSession } from '../../../auth/utils/session';
+import { NotificationBell } from '../../../components/ui/NotificationBell';
 
 type HomeHeaderProps = {
   user: UserProfile;
@@ -48,29 +49,36 @@ export function HomeHeader({ user }: HomeHeaderProps) {
           </div>
         </div>
 
-        <div className="flex items-center gap-3 rounded-[22px] bg-white/80 px-4 py-3 shadow-[0_10px_30px_rgba(15,23,42,0.08)]">
-          {user.avatarUrl && !avatarFailed ? (
-            <img
-              className="h-16 w-16 rounded-full object-cover ring-2 ring-[#e8ddb6]"
-              src={user.avatarUrl}
-              alt={`Avatar de ${user.name}`}
-              onError={() => setAvatarFailed(true)}
-            />
-          ) : (
-            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#f6edd1] text-lg font-semibold text-[#9b7e22] ring-2 ring-[#e8ddb6]">
-              {initials || 'NM'}
+        <div className="flex items-center gap-4">
+          {/* O Sino de Notificações */}
+          <div className="flex items-center justify-center h-12 w-12 bg-white/60 rounded-full shadow-sm ring-1 ring-black/5">
+            <NotificationBell />
+          </div>
+
+          <div className="flex items-center gap-3 rounded-[22px] bg-white/80 px-4 py-3 shadow-[0_10px_30px_rgba(15,23,42,0.08)]">
+            {user.avatarUrl && !avatarFailed ? (
+              <img
+                className="h-16 w-16 rounded-full object-cover ring-2 ring-[#e8ddb6]"
+                src={user.avatarUrl}
+                alt={`Avatar de ${user.name}`}
+                onError={() => setAvatarFailed(true)}
+              />
+            ) : (
+              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#f6edd1] text-lg font-semibold text-[#9b7e22] ring-2 ring-[#e8ddb6]">
+                {initials || 'NM'}
+              </div>
+            )}
+            <div>
+              <p className="text-sm font-semibold text-slate-800">Perfil</p>
+              <p className="text-xs text-[#6b7280]">Acesse suas receitas e atalhos</p>
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="mt-2 inline-flex items-center rounded-full border border-[#d4c28a] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#8d6d08] transition hover:bg-[#fbf3d8]"
+              >
+                Sair
+              </button>
             </div>
-          )}
-          <div>
-            <p className="text-sm font-semibold text-slate-800">Perfil</p>
-            <p className="text-xs text-[#6b7280]">Acesse suas receitas e atalhos</p>
-            <button
-              type="button"
-              onClick={handleLogout}
-              className="mt-2 inline-flex items-center rounded-full border border-[#d4c28a] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#8d6d08] transition hover:bg-[#fbf3d8]"
-            >
-              Sair
-            </button>
           </div>
         </div>
       </div>

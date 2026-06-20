@@ -180,6 +180,20 @@ export function AdminCategoryManager({ title, endpoint }: AdminCategoryManagerPr
     }
   };
 
+  const handleHardDelete = async (id: number) => {
+    if (!confirm('Excluir DEFINITIVAMENTE? Esta ação não pode ser desfeita.')) return;
+
+    try {
+      await api.delete(`${endpoint}/${id}?hard=true`);
+      if (editId === id) {
+        resetForm();
+      }
+      await fetchCategorias();
+    } catch {
+      setError('Não foi possível excluir. Verifique se há itens vinculados.');
+    }
+  };
+
   return (
     <section className="rounded-[30px] border border-[#e8dcc0] bg-[linear-gradient(180deg,#fffdf8_0%,#f8f2e4_100%)] p-6 shadow-[0_18px_45px_rgba(70,54,15,0.06)]">
       <div className="flex flex-col gap-5 border-b border-[#ece2c8] pb-5 lg:flex-row lg:items-end lg:justify-between">
@@ -286,6 +300,15 @@ export function AdminCategoryManager({ title, endpoint }: AdminCategoryManagerPr
                 >
                   <TrashIcon />
                   Inativar
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleHardDelete(categoria.id)}
+                  className="inline-flex items-center gap-2 rounded-full border border-red-600 bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-700"
+                >
+                  <TrashIcon />
+                  Excluir
                 </button>
               </div>
             </article>

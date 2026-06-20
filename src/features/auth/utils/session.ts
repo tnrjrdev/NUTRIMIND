@@ -3,6 +3,7 @@ export type AuthUser = {
   nome: string;
   email: string;
   ativo: boolean;
+  papel: string;
   createdAt?: string;
   updatedAt?: string;
 };
