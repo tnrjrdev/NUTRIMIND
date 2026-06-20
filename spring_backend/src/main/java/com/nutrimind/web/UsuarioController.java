@@ -1,11 +1,13 @@
 package com.nutrimind.web;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.nutrimind.entity.Papel;
 import com.nutrimind.entity.Usuario;
 import com.nutrimind.repository.UsuarioRepository;
 import com.nutrimind.security.JwtService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -69,6 +71,7 @@ public class UsuarioController {
         usuario.setEmail(email);
         usuario.setSenhaHash(passwordEncoder.encode(senha));
         usuario.setAtivo(body.has("ativo") ? body.get("ativo").asBoolean(true) : true);
+        aplicarPapelEVinculo(usuario, body);
         return ResponseEntity.status(HttpStatus.CREATED).body(repository.save(usuario));
     }
 
@@ -100,7 +103,43 @@ public class UsuarioController {
         if (!isBlank(senha)) {
             usuario.setSenhaHash(passwordEncoder.encode(senha));
         }
+        aplicarPapelEVinculo(usuario, body);
         return ResponseEntity.ok(repository.save(usuario));
+    }
+
+    /**
+     * Define papel (PACIENTE/NUTRICIONISTA/ADMIN) e o nutricionista vinculado, quando enviados.
+     * Apenas ADMIN pode alterar esses campos (evita escalonamento de privilegio).
+     */
+    private void aplicarPapelEVinculo(Usuario usuario, JsonNode body) {
+        boolean alteraPapel = body.hasNonNull("papel");
+        boolean alteraVinculo = body.has("nutricionistaId");
+        if (!alteraPapel && !alteraVinculo) {
+            return;
+        }
+        if (usuarioLogado().getPapelEfetivo() != Papel.ADMIN) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                    "Apenas administradores podem definir papel ou vinculo.");
+        }
+        if (body.hasNonNull("papel")) {
+            try {
+                usuario.setPapel(Papel.valueOf(body.get("papel").asText()));
+            } catch (IllegalArgumentException e) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        "papel invalido: " + body.get("papel").asText());
+            }
+        }
+        if (body.has("nutricionistaId")) {
+            JsonNode node = body.get("nutricionistaId");
+            if (node.isNull()) {
+                usuario.setNutricionista(null);
+            } else {
+                Usuario nutri = repository.findById(node.asLong())
+                        .orElseThrow(() -> new ResponseStatusException(
+                                HttpStatus.BAD_REQUEST, "nutricionista inexistente"));
+                usuario.setNutricionista(nutri);
+            }
+        }
     }
 
     @DeleteMapping("/{id}")
@@ -140,6 +179,7 @@ public class UsuarioController {
         usuario.setEmail(email);
         usuario.setSenhaHash(passwordEncoder.encode(senha));
         usuario.setAtivo(true);
+        usuario.setPapel(Papel.PACIENTE);
         usuario = repository.save(usuario);
 
         String token = jwtService.generateToken(usuario.getId());
@@ -147,6 +187,15 @@ public class UsuarioController {
                 "auth", true,
                 "token", token,
                 "user", usuario));
+    }
+
+    private Usuario usuarioLogado() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (!(principal instanceof Long userId)) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Usuario nao autenticado");
+        }
+        return repository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Usuario nao encontrado"));
     }
 
     private static String text(JsonNode node, String key) {

@@ -1,9 +1,13 @@
 import { api } from './api';
 
+export type TipoRefeicao = 'CAFE_DA_MANHA' | 'ALMOCO' | 'JANTAR' | 'LANCHE' | 'OUTRO';
+
 export interface RefeicaoEnviada {
   id: number;
   descricao: string;
   imagemUrl: string;
+  tipoRefeicao?: TipoRefeicao | null;
+  capturadaEm?: string | null;
   curtido: boolean;
   createdAt: string;
   usuario: {
@@ -12,13 +16,24 @@ export interface RefeicaoEnviada {
   };
 }
 
+export interface CriarRefeicaoInput {
+  imagemUrl: string;
+  descricao?: string;
+  tipoRefeicao?: TipoRefeicao;
+  capturadaEm?: string;
+}
+
 export const refeicoesService = {
-  getRefeicoes: async () => {
-    const response = await api.get<RefeicaoEnviada[]>('/refeicoes');
+  // Feed ja vem filtrado por papel/vinculo no backend (paciente ve as proprias;
+  // nutricionista ve as dos seus pacientes). pacienteId e opcional (nutri/admin).
+  getRefeicoes: async (pacienteId?: number) => {
+    const response = await api.get<RefeicaoEnviada[]>('/refeicoes', {
+      params: pacienteId ? { pacienteId } : undefined,
+    });
     return response.data;
   },
 
-  criarRefeicao: async (data: { descricao?: string; imagemUrl: string }) => {
+  criarRefeicao: async (data: CriarRefeicaoInput) => {
     const response = await api.post<RefeicaoEnviada>('/refeicoes', data);
     return response.data;
   },

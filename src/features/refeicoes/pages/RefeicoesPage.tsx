@@ -1,7 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import type { RefeicaoEnviada } from '../../../services/refeicoesService';
+import type { RefeicaoEnviada, TipoRefeicao } from '../../../services/refeicoesService';
 import { refeicoesService } from '../../../services/refeicoesService';
+
+const TIPO_LABELS: Record<TipoRefeicao, string> = {
+  CAFE_DA_MANHA: 'Café da manhã',
+  ALMOCO: 'Almoço',
+  JANTAR: 'Jantar',
+  LANCHE: 'Lanche',
+  OUTRO: 'Outro',
+};
 
 export function RefeicoesPage() {
   const [refeicoes, setRefeicoes] = useState<RefeicaoEnviada[]>([]);
@@ -9,6 +17,7 @@ export function RefeicoesPage() {
   const [imagemUrl, setImagemUrl] = useState('');
   const [nomeArquivo, setNomeArquivo] = useState('');
   const [descricao, setDescricao] = useState('');
+  const [tipoRefeicao, setTipoRefeicao] = useState<TipoRefeicao | ''>('');
   const [enviando, setEnviando] = useState(false);
 
   useEffect(() => {
@@ -47,11 +56,16 @@ export function RefeicoesPage() {
 
     setEnviando(true);
     try {
-      const novaRefeicao = await refeicoesService.criarRefeicao({ imagemUrl, descricao });
+      const novaRefeicao = await refeicoesService.criarRefeicao({
+        imagemUrl,
+        descricao,
+        ...(tipoRefeicao ? { tipoRefeicao } : {}),
+      });
       setRefeicoes([novaRefeicao, ...refeicoes]);
       setImagemUrl('');
       setNomeArquivo('');
       setDescricao('');
+      setTipoRefeicao('');
       toast.success('Refeição enviada com sucesso!');
     } catch (error) {
       toast.error('Erro ao enviar refeição');
@@ -105,6 +119,19 @@ export function RefeicoesPage() {
               rows={2}
             />
           </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Tipo de refeição (opcional)</label>
+            <select
+              value={tipoRefeicao}
+              onChange={(e) => setTipoRefeicao(e.target.value as TipoRefeicao | '')}
+              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none bg-white"
+            >
+              <option value="">Selecione...</option>
+              {(Object.keys(TIPO_LABELS) as TipoRefeicao[]).map((tipo) => (
+                <option key={tipo} value={tipo}>{TIPO_LABELS[tipo]}</option>
+              ))}
+            </select>
+          </div>
           <button
             type="submit"
             disabled={enviando || !imagemUrl}
@@ -130,8 +157,15 @@ export function RefeicoesPage() {
                 <div className="font-medium text-gray-800">
                   {refeicao.usuario?.nome || 'Usuário'}
                 </div>
-                <div className="text-xs text-gray-400">
-                  {new Date(refeicao.createdAt).toLocaleDateString()}
+                <div className="flex items-center gap-2">
+                  {refeicao.tipoRefeicao && (
+                    <span className="rounded-full bg-green-50 px-2.5 py-0.5 text-xs font-medium text-green-700">
+                      {TIPO_LABELS[refeicao.tipoRefeicao]}
+                    </span>
+                  )}
+                  <span className="text-xs text-gray-400">
+                    {new Date(refeicao.createdAt).toLocaleDateString()}
+                  </span>
                 </div>
               </div>
               
