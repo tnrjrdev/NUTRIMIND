@@ -11,4 +11,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     boolean existsByEmail(String email);
 
     java.util.List<com.nutrimind.entity.Usuario> findByPapel(com.nutrimind.entity.Papel papel);
+
+    java.util.List<Usuario> findByNutricionista_Id(Long nutricionistaId);
 }

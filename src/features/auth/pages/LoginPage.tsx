@@ -84,7 +84,12 @@ export function LoginPage() {
       const data = response.data;
       if (data.auth && data.token) {
         setAuthSession(data.token, data.user);
-        navigate('/home', { replace: true });
+        
+        if (data.user.papel === 'NUTRICIONISTA') {
+          navigate('/nutri/dashboard', { replace: true });
+        } else {
+          navigate('/home', { replace: true });
+        }
       } else {
         setError('Erro de conexão. Verifique sua internet e tente novamente.');
       }

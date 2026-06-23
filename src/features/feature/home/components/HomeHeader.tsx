@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { UserProfile } from "../types/home.types";
 import { clearAuthSession } from '../../../auth/utils/session';
-import { NotificationBell } from '../../../components/ui/NotificationBell';
+import { NotificationBell } from '../../../../components/ui/NotificationBell';
 
 type HomeHeaderProps = {
   user: UserProfile;

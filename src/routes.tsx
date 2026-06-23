@@ -28,6 +28,8 @@ import { SubstituicaoDetailPage } from './features/substituicoes/pages/Substitui
 import { SubstituicoesPage } from './features/substituicoes/pages/SubstituicoesPage';
 import { RefeicoesPage } from './features/refeicoes/pages/RefeicoesPage';
 import { HistoricoPacientePage } from './features/refeicoes/pages/HistoricoPacientePage';
+import { NutricionistaDashboardPage } from './features/nutricionista/pages/NutricionistaDashboardPage';
+import { PacientesListPage } from './features/nutricionista/pages/PacientesListPage';
 
 export function AppRoutes() {
   return (
@@ -65,6 +67,10 @@ export function AppRoutes() {
           <Route path="/bem-estar/:id" element={<BemEstarDetailPage />} />
           <Route path="/dicas" element={<DicasPage />} />
           <Route path="/dicas/:id" element={<DicaDetailPage />} />
+
+          {/* Rotas do Nutricionista */}
+          <Route path="/nutri/dashboard" element={<NutricionistaDashboardPage />} />
+          <Route path="/nutri/pacientes" element={<PacientesListPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
